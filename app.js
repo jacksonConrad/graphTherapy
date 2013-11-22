@@ -1,6 +1,6 @@
-// Uses functions in articleprovider-memory.js
+// Uses functions in articleprovider-mongodb.js
 var express = require('express');
-var ArticleProvider = require('./articleprovider-memory').ArticleProvider;
+var ArticleProvider = require('./articleprovider-mongodb').ArticleProvider;
 
 // module.exports is the object that's returned as the result of the 'require' call
 var app = module.exports = express();
@@ -28,10 +28,12 @@ app.configure('production', function(){
   app.use(express.errorHandler());
 });
 
-// Instantiate instance of ArticleProvider
-var articleProvider = new ArticleProvider();
+// Instantiate instance of ArticleProvider, passing it a host and port #
+var articleProvider = new ArticleProvider('localhost', 27017);
 
-// Routes
+/* ROUTES */
+
+// Home
 app.get('/', function(req, res){
   //When we recieve GET request for URI: '/', find all documents and send them as the response
   articleProvider.findAll(function(error, docs){
@@ -44,5 +46,27 @@ app.get('/', function(req, res){
   })
 });
 
+// Render Blog Post Page
+app.get('/blog/new', function(req, res) {
+  res.render('blog_new.jade',
+    {title: 'New Post'
+    }
+  );
+});
+
+// Submit new entry and redirect to home
+app.post('/blog/new', function(req, res) {
+  // When user saves their post, call the save function, passing it the text 
+  // from the title and body form
+  console.log("HIT THE FUCNTION");
+  articleProvider.save({
+    title: req.param('title'),
+    body: req.param('body')
+  }, function( error, docs) {
+    res.redirect('/')
+  });
+});
+
 // Listen on port 3000!!!
 app.listen(3000);
+console.log("Express server listening on port %d in %s mode", 27017, app.get('env') );
