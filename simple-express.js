@@ -3,7 +3,8 @@
 //Module dependencies
 var express = require('express');
 
-var app = express.createServer();
+// Essentially, creates server
+var app = express();
 
 // Configuration
 app.configure( function() {
