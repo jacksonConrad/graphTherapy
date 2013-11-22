@@ -31,7 +31,7 @@ app.configure('production', function(){
 // Instantiate instance of ArticleProvider, passing it a host and port #
 var articleProvider = new ArticleProvider('localhost', 27017);
 
-/* ROUTES */
+/* ROUTES *///
 
 // Home
 app.get('/', function(req, res){
@@ -67,6 +67,29 @@ app.post('/blog/new', function(req, res) {
   });
 });
 
+// Show single blog entry
+app.get('/blog/:id', function(req, res) {
+    articleProvider.findById(req.params.id, function(error, article) {
+        res.render('blog_show.jade',
+        {
+          title: article.title,
+          article:article
+        }
+        );
+    });
+});
+
+// Submit comment and redirect to 
+app.post('/blog/addComment', function(req, res) {
+    articleProvider.addCommentToArticle(req.param('_id'), {
+        person: req.param('person'),
+        comment: req.param('comment'),
+        created_at: new Date()
+       } , function( error, docs) {
+           res.redirect('/blog/' + req.param('_id'))
+       });
+});
+
 // Listen on port 3000!!!
 app.listen(3000);
-console.log("Express server listening on port %d in %s mode", 27017, app.get('env') );
+console.log("Express server listening on port %d in %s mode", 3000, app.get('env') );
