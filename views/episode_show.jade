@@ -1,0 +1,8 @@
+extends layout
+block content
+  h1= "episode" + title
+  div.article
+      div.title= article.title
+      div.songs
+      - each song in article.songs
+        div.song= song.artist + " " + song.song

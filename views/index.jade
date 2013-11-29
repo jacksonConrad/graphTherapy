@@ -4,7 +4,5 @@ block content
     #articles
         - each article in articles
           div.article
-            div.created_at= article.created_at
             div.title 
-                a(href="/blog/"+article._id.toHexString())!= article.title
-            div.body= article.body
+                a(href="/episode/"+article._id)!= "Episode " + article.title

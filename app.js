@@ -1,11 +1,12 @@
 // Uses functions in articleprovider-mongodb.js
 var express = require('express');
-var ArticleProvider = require('./articleprovider-mongodb').ArticleProvider;
+var ArticleProvider = require('./articleprovider-memory').ArticleProvider;
+//var ArticleProvider = require('./articleprovider-mongodb').ArticleProvider;
 
 // module.exports is the object that's returned as the result of the 'require' call
 var app = module.exports = express();
 
-// Configuration
+// Configuration hsdhsjd
 app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
@@ -29,7 +30,8 @@ app.configure('production', function(){
 });
 
 // Instantiate instance of ArticleProvider, passing it a host and port #
-var articleProvider = new ArticleProvider('localhost', 27017);
+//var articleProvider = new ArticleProvider('localhost', 27017);
+var articleProvider = new ArticleProvider();
 
 /* ROUTES *///
 
@@ -39,38 +41,45 @@ app.get('/', function(req, res){
   articleProvider.findAll(function(error, docs){
       // res.render() is the callback for findAll
       res.render('index.jade', {  
-        title: 'Blog',
+        title: 'Group Therapy Episodes',
         articles: docs
         
       });
   })
 });
 
-// Render Blog Post Page
+// Update database
+/*
 app.get('/blog/new', function(req, res) {
-  res.render('blog_new.jade',
-    {title: 'New Post'
-    }
-  );
+  //Add new article to database
 });
+*/
 
-// Submit new entry and redirect to home
-app.post('/blog/new', function(req, res) {
+
+
+/* Submit new entry and redirect to home */
+/*
+app.post('/episode/new', function(req, res) {
   // When user saves their post, call the save function, passing it the text 
   // from the title and body form
   console.log("HIT THE FUCNTION");
   articleProvider.save({
-    title: req.param('title'),
-    body: req.param('body')
+    // INSERT ACTUAL EPISODE SCHEMA HERE 
+
+
+
+    // title: req.param('title'),
+    // body: req.param('body')
   }, function( error, docs) {
     res.redirect('/')
   });
 });
+*/
 
-// Show single blog entry
-app.get('/blog/:id', function(req, res) {
+// Show single episode
+app.get('/episode/:id', function(req, res) {
     articleProvider.findById(req.params.id, function(error, article) {
-        res.render('blog_show.jade',
+        res.render('episode_show.jade',
         {
           title: article.title,
           article:article
@@ -79,9 +88,10 @@ app.get('/blog/:id', function(req, res) {
     });
 });
 
-// Submit comment and redirect to 
+/* Submit comment and redirect to 
+
 app.post('/blog/addComment', function(req, res) {
-    articleProvider.addCommentToArticle(req.param('_id'), {
+    articleProvider.addSongToArticle(req.param('_id'), {
         person: req.param('person'),
         comment: req.param('comment'),
         created_at: new Date()
@@ -89,6 +99,17 @@ app.post('/blog/addComment', function(req, res) {
            res.redirect('/blog/' + req.param('_id'))
        });
 });
+*/
+
+/* PUT CODE FOR PUTTING FILE IN DATABASE HERE */
+
+
+
+
+
+
+
+/*********************************************/
 
 // Listen on port 3000!!!
 app.listen(3000);
