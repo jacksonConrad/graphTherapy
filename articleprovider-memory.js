@@ -31,7 +31,7 @@ ArticleProvider.prototype.save = function(articles, callback) {
 
     //If the episode has no songs (stupid condition)
     if( article.songs === undefined ) {
-      console.log("WARNING: artical was submitted with no songs");
+      console.log("WARNING: article was submitted with no songs");
       article.songs = [];
     }
 

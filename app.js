@@ -1,6 +1,6 @@
 // Uses functions in articleprovider-mongodb.js
 var express = require('express');
-var ArticleProvider = require('./articleprovider-memory').ArticleProvider;
+var ArticleProvider = require('./articleprovider-mongodb').ArticleProvider;
 //var ArticleProvider = require('./articleprovider-mongodb').ArticleProvider;
 
 // module.exports is the object that's returned as the result of the 'require' call
@@ -31,7 +31,33 @@ app.configure('production', function(){
 
 // Instantiate instance of ArticleProvider, passing it a host and port #
 //var articleProvider = new ArticleProvider('localhost', 27017);
-var articleProvider = new ArticleProvider();
+var articleProvider = new ArticleProvider('localhost', 27017);
+
+
+/*  TESTING FOR POPULATING DB FROM FILE */
+
+
+function saveCallback(article) {
+  //console.log(article);
+  console.log("End save test");
+}
+
+//articleProvider.populateDB(1);
+//articleProvider.save(1, saveCallback);
+
+function getCallback(article_collection) {
+  console.log(article_collection);
+}
+
+
+
+//articleProvider.getCollection(getCallback);
+
+
+
+
+
+
 
 /* ROUTES *///
 
@@ -45,6 +71,13 @@ app.get('/', function(req, res){
         articles: docs
         
       });
+
+      articleProvider.save(1,
+        function(error, article) {
+        console.log('inside save callback')
+        } 
+      );
+
   })
 });
 
