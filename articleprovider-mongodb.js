@@ -106,6 +106,7 @@ ArticleProvider.prototype.save = function(articleNumber, callback) {
       * song name
       * [blank line]    <--blank line at the end is important
     */
+
     else {
       if( i % 3 == 0)
         song.artist = line;
@@ -114,18 +115,22 @@ ArticleProvider.prototype.save = function(articleNumber, callback) {
       else
         console.log('********\n\n\n\n\nTextfile formatted improperly!!!!\n\n\n\n\n**********');
 
-    console.log(song);
-    i++;
-
-      
+    // increment line number
+    i++;      
     }
   }).then( function () {
     // Insert article into the DB
     
-    console.log(article.songs);
+    // console.log(article.songs);
 
-    collection.insert(article, function() {
+    collection.insert(article, function( error ) {
       console.log("article inserted");
+      if( error ) callback( error );
+      else {
+        console.log('callback for save function');
+        callback(null);
+      }
+
     });
   });  
 };

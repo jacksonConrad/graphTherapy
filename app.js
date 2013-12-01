@@ -6,7 +6,7 @@ var ArticleProvider = require('./articleprovider-mongodb').ArticleProvider;
 // module.exports is the object that's returned as the result of the 'require' call
 var app = module.exports = express();
 
-// Configuration hsdhsjd
+// Configuration
 app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
@@ -17,7 +17,11 @@ app.configure(function(){
   app.use(express.static(__dirname + '/public'));
 });
 
-/*  SEPERATE CONFIGS FOR DEV & PROD ENVIRONMENTS */
+/*  
+
+SEPERATE CONFIGS FOR DEV & PROD ENVIRONMENTS 
+
+*/
 
 // Dev Env - for debugging
 app.configure('development', function(){
@@ -34,59 +38,64 @@ app.configure('production', function(){
 var articleProvider = new ArticleProvider('localhost', 27017);
 
 
-/*  TESTING FOR POPULATING DB FROM FILE */
+/* 
 
 
-function saveCallback(article) {
-  //console.log(article);
-  console.log("End save test");
-}
-
-//articleProvider.populateDB(1);
-//articleProvider.save(1, saveCallback);
-
-function getCallback(article_collection) {
-  console.log(article_collection);
-}
+ROUTES 
 
 
-
-//articleProvider.getCollection(getCallback);
-
-
-
-
-
-
-
-/* ROUTES *///
+*/
 
 // Home
 app.get('/', function(req, res){
   //When we recieve GET request for URI: '/', find all documents and send them as the response
   articleProvider.findAll(function(error, docs){
       // res.render() is the callback for findAll
+      //res.writeHead(200, {'Content-Type': 'text/html'});
+
       res.render('index.jade', {  
         title: 'Group Therapy Episodes',
         articles: docs
         
       });
-
+      res.end();
+/*
       articleProvider.save(1,
         function(error, article) {
-        console.log('inside save callback')
+       //console.log('inside save callback')
         } 
       );
+  */
+      //console.log(req.body.newEpisode);
 
   })
 });
 
 // Update database
-/*
-app.get('/blog/new', function(req, res) {
-  //Add new article to database
+app.post('/', function(req, res) {
+  /*
+
+  TEMPORARY method of adding new episodes to the database.
+  Enventually, this will be done in t he background on an interval
+
+  */
+
+  //var episodeNumber = req.param("newEpisode");
+  
+  var episodeNumber = req.body.newEpisode;
+  console.log("newEpisode= "+episodeNumber);
+
+  
+  articleProvider.save(episodeNumber, 
+    function(error) {
+      console.log("Redirecting");
+    res.redirect('/');
+  });
+  
+  
+
 });
-*/
+
 
 
 
