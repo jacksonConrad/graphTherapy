@@ -1,6 +1,7 @@
 // Uses functions in articleprovider-mongodb.js
 var express = require('express');
 var ArticleProvider = require('./articleprovider-mongodb').ArticleProvider;
+tools = require('./tools');
 //var ArticleProvider = require('./articleprovider-mongodb').ArticleProvider;
 
 // module.exports is the object that's returned as the result of the 'require' call
@@ -81,9 +82,21 @@ app.post('/', function(req, res) {
   */
 
   //var episodeNumber = req.param("newEpisode");
-  var 
   var episodeNumber = req.body.newEpisode;
   console.log("newEpisode= "+episodeNumber);
+
+
+
+  tools.scrape(episodeNumber, function(article) {
+      console.log("Scraped!");
+      console.log(article);
+      articleProvider.save(article, function() {
+        console.log('Article Saved!!!!!');
+        console.log('Redirecting...');
+        res.redirect('/');
+
+      });
+  });
 
   // Construct URL based on input
 

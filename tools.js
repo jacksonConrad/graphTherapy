@@ -2,8 +2,29 @@ var request = require('request');
 var cheerio = require('cheerio');
 var fs = require('fs');
 
+// Passes a newly created article to the callback
 exports.scrape = function (episodeNumber, callback) {
-	var url = 'http://www.aboveandbeyond.nu/radio/abgt002';
+
+	var number = episodeNumber.toString();
+	console.log('length: ' + number.length);
+	console.log('episodeNumber: ' + number);
+	var article = {title: null, songs:[]};
+  	article.title = 'Episode ' + episodeNumber;
+
+	//return;
+
+	if(number.length == 1)
+		number ='00' + number;
+	else if(number.length == 2)
+		number = '0' + number;
+	else if(number.length == 3)
+		number = number;
+	else {
+		console.log("ERROR: Invalid length of 'episodeNumber'.  Should be 1-3 digits");
+		return;
+	}
+
+	var url = 'http://www.aboveandbeyond.nu/radio/abgt' + number;
 	var fd = '';
 	var date = '';
 
@@ -28,16 +49,27 @@ exports.scrape = function (episodeNumber, callback) {
 	            //var words = [];
 
 	            // Parse each line into artist, song, and label
-	            for(var i = 0; i<lines.length; i++)
+	            for(var i = 0; i<lines.length; i++) {
+	            	//console.log(lines[i]);
+
 	                parseLine(lines[i], function(words) {
 	                    //console.log(words);
-	                    if(words[0].charAt(0).match('[1-9]'))
+	                    if(words == null)
+	                    	//do nothing
+	                    	;
+	                    else {
 	                        parseWords(words, function(Song) {
+	                        	// push song to article
+	                        		article.songs.push(Song);
+
 	                        });
+	                    }
+	                    
 	                });
+	            }
 	        }          
 	    });
-	    callback();
+	    callback(article);
 
 	});
 
@@ -45,14 +77,19 @@ exports.scrape = function (episodeNumber, callback) {
 }
 
 
-
-
+/****** Private functions ******/
 
 //Given a line, create an array of words
 var parseLine = function (line, callback) {
 //console.log(line);
 var words = line.split(' ');
-callback(words);
+if(words[0].charAt(0).match('[0-9]')) {
+	callback(words);
+}
+else
+	callback(null);
+
+
 // return words;
 }
 
@@ -106,9 +143,8 @@ var parseWords = function (words, callback) {
                     }
                     j--;
 
-                    artist.trim();
-                    Song.artist = artist;
-                    console.log('artist: ' + Song.artist);
+                    Song.artist = artist.trim();
+                    console.log('artist: ' + Song.artist.trim());
                     //console.log('j: ' + j);
                 }
                 else if(start == '"') {
@@ -137,7 +173,7 @@ var parseWords = function (words, callback) {
 
                 }
                 else if( start == '(' ) {
-                    while(words[j].substring(words[j].length - 1) != ')') {
+                    while(words[j].substring(words[j].length - 1) != ')' ) {
                         //do things
                         label += words[j] + ' ';
 

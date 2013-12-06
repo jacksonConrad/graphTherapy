@@ -1,5 +1,6 @@
 tools = require('./tools');
 
-tools.scrape(1, function() {
+tools.scrape(21, function(article) {
 	console.log("Scraped!");
-})
+	console.log(article);
+});

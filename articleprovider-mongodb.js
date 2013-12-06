@@ -47,6 +47,37 @@ ArticleProvider.prototype.findById = function(id, callback) {
 };
 
 
+// Adds an article to the database.
+ArticleProvider.prototype.save = function(article, callback) {
+
+  // Check if this article has already been created before you go making a null one.
+
+  /*
+  this.findById(articleNumber, function(error, result) {
+    if(result != null) {
+      console.log('ERROR: Article ' + articleNumber + ' has already been created.');
+      callback(result);
+    }
+  });
+  */
+
+  // Instantiate empty objects to fill later
+  this.getCollection(function(error, article_collection) {
+
+    console.log('collection got');
+    article_collection.insert(article, function( error ) {
+      console.log("article inserted");
+      if( error ) callback( error );
+      else {
+        console.log('callback for newArticle function');
+        callback();
+      }
+    });
+  });
+
+}
+
+/*
 ArticleProvider.prototype.save = function(articleNumber, callback) {
  // Create new Article and save it to the DB
  // var article = {title: '1', songs:[{artist:'Mat Zo', song:'Bipolar'}, 
@@ -90,6 +121,7 @@ ArticleProvider.prototype.save = function(articleNumber, callback) {
       j++;
 
     }
+    */
 
     // This logic assumes that the textfile has been formatted as such:
     /*
@@ -106,7 +138,7 @@ ArticleProvider.prototype.save = function(articleNumber, callback) {
       * song name
       * [blank line]    <--blank line at the end is important
     */
-
+/*
     else {
       if( i % 3 == 0)
         song.artist = line;
@@ -130,22 +162,22 @@ ArticleProvider.prototype.save = function(articleNumber, callback) {
         console.log('callback for save function');
         callback(null);
       }
-
     });
   });  
 };
+*/
 
 
-ArticleProvider.prototype.addSongToArticle = function(articleId, artist, song_title, callback) {
+ArticleProvider.prototype.addSongToArticle = function(articleId, Song, callback) {
   this.getCollection(function(error, article_collection) {
     if( error ) callback( error );
     else {
       article_collection.update(
         {_id: article_collection.db.bson_serializer.ObjectID.createFromHexString(articleId)},
-        {"$push": {songs: song}},
+        {"$push": {songs: Song}},
         function(error, article){
           if( error ) callback(error);
-          else callback(null, article)
+          else callback(null, article);
         });
     }
   });
