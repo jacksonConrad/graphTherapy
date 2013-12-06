@@ -59,7 +59,7 @@ ArticleProvider.prototype.save = function(articleNumber, callback) {
   });
 
 
-  // Intantiate empty objects to fill later
+  // Instantiate empty objects to fill later
   var article = {title: null, songs:[]};
   article.title = 'Episode ' + articleNumber;
   var songs = [];

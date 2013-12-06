@@ -81,16 +81,22 @@ app.post('/', function(req, res) {
   */
 
   //var episodeNumber = req.param("newEpisode");
-  
+  var 
   var episodeNumber = req.body.newEpisode;
   console.log("newEpisode= "+episodeNumber);
 
+  // Construct URL based on input
+
+  // Call scraping function
+
   
+  /*
   articleProvider.save(episodeNumber, 
     function(error) {
       console.log("Redirecting");
     res.redirect('/');
   });
+*/
   
   
 

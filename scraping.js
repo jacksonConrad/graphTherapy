@@ -1,11 +1,11 @@
 var request = require('request');
 var cheerio = require('cheerio');
-var lineReader = require('line-reader');
+
 var fs = require('fs');
-var tools = require('./tools')
+var tools = require('./tools');
 
 var url = 'http://www.aboveandbeyond.nu/radio/abgt002';
-var fd = './episodeTEST.txt';
+var fd = '';
 var date = '';
 
 
@@ -28,19 +28,20 @@ request(url, function(err, resp, body) {
             var lines = buffer.split('\n');
             //var words = [];
 
+            // Parse each line into artist, song, and label
             for(var i = 0; i<lines.length; i++)
-                // Split lines into array of words 
-                
-                
-                // Parse a line into an array of words
-                parseLine(lines[i], function(words) {
+                tools.parseLine(lines[i], function(words) {
                     //console.log(words);
                     if(words[0].charAt(0).match('[1-9]'))
-                        parseWords(words, function() {
+                        tools.parseWords(words, function(Song) {
                         });
                 });
         }          
     });
+
+});
+
+
     /*
     fs.writeFile(fd, buffer, function(err) {
         if (err) return console.log(err);
@@ -52,12 +53,8 @@ request(url, function(err, resp, body) {
         //console.log('text written to > ' + fd);
     });
     */
-    
 
-
-
-
-});
+/*
 
 
 function parseLine (line, callback) {
@@ -72,135 +69,106 @@ function parseWords (words, callback) {
 
     // If first character  of the line isn't a number, trash it
 
-        // Loop through words in the line to store them in database;
+    // Loop through words in the line to store them in database;
 
-        var song = '';
-        var artist = '';
-        var label = '';
+    var song = '';
+    var artist = '';
+    var label = '';
+    var Song = new Object();
 
-        for(var j = 0; j<words.length; j++) {
-            //console.log('outside j: ' + j);
-            //console.log('On word: ' + words[j]);;
+    for(var j = 0; j<words.length; j++) {
+        //console.log('outside j: ' + j);
+        //console.log('On word: ' + words[j]);;
 
-            // Get the first and last character of each word
-            var start = words[j].charAt(0);
-            var end =  words[j].charAt(words[j].length - 1);
-            var gotArtist = false;
-            // Logging
-            //console.log('start: ' + start);
-            //console.log('end: ' + end);
-
-
-
-            // If its the first word, its the index.  Trash it.
-            if ( j == 0 ) {
-                // Do nothing
-                //console.log('j = 0');
-            }
-            else {
-                //console.log('about to hit if statements');
-                // Check what type you are storing
-                // Cases: Artist, Song, Label
-                while( 1 ) {
-                    //console.log("On word: " + words[j]);
-                    if(words[j].charAt(0).match('[a-z]|[A-Z]') ) {
-                        //console.log("artist loop!");
-                        //console.log(words[j]);
-
-                        while(words[j].charAt(0) != '"') {
-                            //console.log(words[j].charAt(0));
-                            //console.log(words[j]);
-                            artist += words[j] + ' ';
-                            j++;
-                        }
-                        j--;
-
-                        artist.trim();
-                        console.log('artist: ' + artist);
-                        //console.log('j: ' + j);
-                    }
-                    else if(start == '"') {
-                        while(words[j].substring(words[j].length - 1) != '\"') {
-                            //do things
-                            song += words[j] + ' ';
-                            j++;
-                        }
-                        song += words[j];
-
-                        console.log("Song: " + song);
-                    }
-                    else if(start == '[') {
-                        console.log('remix loop');
-                        while(words[j].substring(words[j].length - 1) != ']') {
-                            //do things
-                            song += words[j] + ' ';
-                            j++;
-                        }
-                        song += words[j];
-                        console.log('song: ' + song);
-
-                    }
-                    else if( start == '(' ) {
-                        while(words[j].substring(words[j].length - 1) != ')') {
-                            //do things
-                            label += words[j] + ' ';
-
-                            j++;
-                        }
-                        //if(end == ')')
-                        
-                        label += words[j];
-                        console.log("label: " + label);
-
-                    } 
-                    else {
-                        console.log("ERROR: default case executed");
-                        return;
-                    }
-                    //console.log('break');
-
-                    break;
-                }
-            }
+        // Get the first and last character of each word
+        var start = words[j].charAt(0);
+        var end =  words[j].charAt(words[j].length - 1);
+        var gotArtist = false;
+        // Logging
+        //console.log('start: ' + start);
+        //console.log('end: ' + end);
 
 
 
-
-
-            /*
-            else if(gotArtist == false) {
-                if(start == '\"') {
-
-                    // Start storing the artists name
-                    artist += words[j].substring(1);
-                }
-                else {
-                    if(end == '\"') {
-                        gotArtist = true;
-                        artist += ' ' + words[j].substring(0, words[j].length - 2);
-                        console.log("Artist: " + artist);
-                        // Write Artist to file
-
-                    }
-                    else
-                        artist += ' ' + words[j];
-
-                }
-            }
-            else if() {
-                ;
-            }
-            */
-              
-
-            // Read words into 'artist' variable until you see a quotation mark
-
-            // Read words into 'song' variable until you see another quotation mark
-
-            // If string starts with [, include it in song name
-
-            // Label is everything inside of ()
+        // If its the first word, its the index.  Trash it.
+        if ( j == 0 ) {
+            // Do nothing
+            //console.log('j = 0');
         }
-          
-          callback();
+        else {
+            //console.log('about to hit if statements');
+            // Check what type you are storing
+            // Cases: Artist, Song, Label
+            while( 1 ) {
+                //console.log("On word: " + words[j]);
+                if(words[j].charAt(0).match('[a-z]|[A-Z]') ) {
+                    //console.log("artist loop!");
+                    //console.log(words[j]);
+
+                    while(words[j].charAt(0) != '"') {
+                        //console.log(words[j].charAt(0));
+                        //console.log(words[j]);
+                        artist += words[j] + ' ';
+                        j++;
+                    }
+                    j--;
+
+                    artist.trim();
+                    Song.artist = artist;
+                    console.log('artist: ' + Song.artist);
+                    //console.log('j: ' + j);
+                }
+                else if(start == '"') {
+                    while(words[j].substring(words[j].length - 1) != '\"') {
+                        //do things
+                        song += words[j] + ' ';
+                        j++;
+                    }
+                    song += words[j];
+                    Song.song = song;
+
+                    console.log("Song: " + Song.song);
+                }
+                else if(start == '[') {
+                    console.log('remix loop');
+                    song += ' ';
+                    while(words[j].substring(words[j].length - 1) != ']') {
+                        //do things
+                        song += words[j] + ' ';
+                        j++;
+                    }
+                    song += words[j];
+
+                    Song.song = song;
+                    console.log('song: ' + Song.song);
+
+                }
+                else if( start == '(' ) {
+                    while(words[j].substring(words[j].length - 1) != ')') {
+                        //do things
+                        label += words[j] + ' ';
+
+                        j++;
+                    }
+                    //if(end == ')')
+                    
+                    label += words[j];
+                    Song.label = label;
+                    console.log("label: " + Song.label);
+
+                } 
+                else {
+                    console.log("ERROR: default case executed");
+                    return;
+                }
+                //console.log('break');
+
+                break;
+            }
+        }
+    }
+    console.log(Song);
+    callback(Song);
 }
+
+*/
