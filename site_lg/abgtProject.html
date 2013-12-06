@@ -1,10 +1,14 @@
+//includes/links
 <script src="../scripts_lg/Chart.js-master/Chart.js"></script>
 <link rel="stylesheet" type="text/css" href="abgtproject.css" media="screen" />
+
+//start html
 <html>
+//bit of laziness, will move this to css in a bit
 <style type="text/css">
-body {
-	background-color: #000;
-}
+	body {
+		background-color: #000;
+		}
 </style>
 <head>
 <title>abgtProject</title>
@@ -12,6 +16,7 @@ body {
 </head>
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 <!-- Save for Web Slices (abgtProject.psd) -->
+//this giant table is my psd, hope jade doesnt fuck this up.
 <table width="1025" height="769" border="0" align="center" cellpadding="0" cellspacing="0" id="Table_01">
 	<tr>
 		<td colspan="14">
@@ -63,10 +68,15 @@ body {
 		<td colspan="2" rowspan="4">
 			<img src="images/abgtProject_14.gif" width="83" height="337" alt=""></td>
 		<td colspan="3" rowspan="3" bgcolor="#3E3E3E">
+		
+		//here is the canvas that holds the charts
 			<canvas id="myChart" width="287" height="287"></canvas>
-            <script src="../scripts_lg/abgtchart.js">		 			</script>
+			//this script holds my placeholder chart
+            <script src="../scripts_lg/abgtchart.js"></script>
             </td>
 		<td colspan="3" rowspan="3" bgcolor="#3E3E3E">
+		
+		//and this div holds my legend, most of the formatting has been moved to the css.
 			<div class="chartLegend">
             <ul>
             	<li class="artist1"> Above &amp; Beyond</li>
