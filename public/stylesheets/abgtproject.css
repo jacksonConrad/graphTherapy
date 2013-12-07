@@ -1,0 +1,42 @@
+@charset "utf-8";
+.chartLegend ul {
+  list-style: none;
+  width: 100%;
+  margin-left: 50px;
+  color: #fff;
+  font-family: Century Gothic;
+}
+.chartLegend li {
+  text-indent: 12px;
+  line-height: 40px;
+  position: relative;
+  font-weight: 200;
+  display: block;
+  float: center;
+  width: 50%;
+  font-size: 1em;
+}
+.chartLegend li:before {
+  display: block;
+  width: 36px;
+  height: 16px;
+  position: absolute;
+  left: -32;
+  top: 10px;
+  content: "";
+}
+.artist1:before {
+  background-color: #637b85;
+}
+.artist2:before {
+  background-color: #2c9c69;
+}
+.artist3:before {
+  background-color: #dbba34;
+}
+.artist4:before {
+  background-color: #c62f29;
+}
+#Table_01 {
+  color: #000;
+}

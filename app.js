@@ -149,6 +149,16 @@ app.get('/episode/:id', function(req, res) {
     });
 });
 
+
+
+app.get('/test', function(req, res) {
+  res.render('abgtproject.jade', {
+    title: 'abgtProject'
+  });
+  res.end();
+});
+
+
 /* Submit comment and redirect to 
 
 app.post('/blog/addComment', function(req, res) {
