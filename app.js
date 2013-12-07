@@ -155,6 +155,12 @@ app.get('/test', function(req, res) {
   res.render('abgtproject.jade', {
     title: 'abgtProject'
   });
+  articleProvider.getTopNArtists(5, function(error, results) {
+    console.log('in app.js');
+  });
+
+
+
   res.end();
 });
 

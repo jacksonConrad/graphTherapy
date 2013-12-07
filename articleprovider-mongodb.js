@@ -46,6 +46,43 @@ ArticleProvider.prototype.findById = function(id, callback) {
     });
 };
 
+ArticleProvider.prototype.getTopNArtists = function(N, callback) {
+  
+  // Create a collection
+  this.getCollection(function(err, collection) {
+
+      // Execute aggregate, notice the pipeline is expressed as an Array
+      collection.aggregate([
+          { $project: {
+            songs: 1
+             }
+            
+          },
+          {
+            $unwind: "$songs"
+          },
+          {
+
+            $group: {
+              _id: "$songs.artist",
+              totalPlays: {$sum: 1}
+
+            }
+          },
+          { $sort: { totalPlays: -1}
+          },
+          { $limit: 7 }
+          
+         
+        ], function(err, result) {
+          console.dir(result);
+          callback(null, result);
+          //db.close();
+      });
+
+  });
+};
+
 
 
 
