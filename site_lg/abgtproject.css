@@ -34,10 +34,16 @@
 	color: #000;
 }
 
-/* THIS IS NEW TOO
 .selectdiv{
 	width:172px;
 	overflow:scroll;
 	height: 360px;
 }
-*/
+
+.copyright{
+	color:white;
+	font-size:7px;
+	font-family:Century Gothic;
+	margin-left:5px;
+	margin-right:5px;
+}
