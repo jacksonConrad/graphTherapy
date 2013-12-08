@@ -34,10 +34,56 @@
 	color: #000;
 }
 
-/* THIS IS NEW TOO
 .selectdiv{
 	width:172px;
 	overflow:scroll;
 	height: 360px;
 }
-*/
+
+.copyright{
+	color:white;
+	font-size:7px;
+	font-family:Century Gothic;
+	margin-left:5px;
+	margin-right:5px;
+}
+
+#trackList{
+	font-family:Century Gothic;
+	font-size:12px;
+	table-layout:auto;
+	border-collapse:collapse;
+	text-align:left;
+	width:100%;
+}
+#trackList th{
+	padding: 9px 8px 8px;
+}
+#trackList td{
+	padding: 9px 8px 8px;
+	border-bottom: 1px solid #ccc
+}
+#trackWrap{
+	overflow:auto;
+	height:144px;
+	width:766px;
+}
+#trackList tbody tr:hover  td{
+	color: #09F;
+}
+
+.falseHeader{
+	color:White;
+	font-family:Century Gothic;
+	margin-left:20px;
+}
+
+.falseHeader2{
+	color:White;
+	font-family:Century Gothic;
+	margin-left:66px;
+}
+
+.selectdiv{
+	font-family:Century Gothic;
+}
