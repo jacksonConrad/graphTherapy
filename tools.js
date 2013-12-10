@@ -63,17 +63,13 @@ exports.scrape = function (episodeNumber, callback) {
 	                        		article.songs.push(Song);
 
 	                        });
-	                    }
-	                    
+	                    } 
 	                });
 	            }
 	        }          
 	    });
 	    callback(article);
-
 	});
-
-	
 }
 
 

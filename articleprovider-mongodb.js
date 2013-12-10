@@ -89,7 +89,7 @@ ArticleProvider.prototype.getTopNArtists = function(N, callback) {
 // Adds an article to the database.
 ArticleProvider.prototype.save = function(article, callback) {
 
-  // Check if this article has already been created before you go making a null one.
+  // Check if this article has already been created before you go making a new one.
 
   /*
   this.findById(articleNumber, function(error, result) {
@@ -113,9 +113,25 @@ ArticleProvider.prototype.save = function(article, callback) {
       }
     });
   });
+};
 
-}
 
+ArticleProvider.prototype.addSongToArticle = function(articleId, Song, callback) {
+  this.getCollection(function(error, article_collection) {
+    if( error ) callback( error );
+    else {
+      article_collection.update(
+        {_id: article_collection.db.bson_serializer.ObjectID.createFromHexString(articleId)},
+        {"$push": {songs: Song}},
+        function(error, article){
+          if( error ) callback(error);
+          else callback(null, article);
+        });
+    }
+  });
+};
+
+exports.ArticleProvider = ArticleProvider;
 /*
 ArticleProvider.prototype.save = function(articleNumber, callback) {
  // Create new Article and save it to the DB
@@ -207,20 +223,6 @@ ArticleProvider.prototype.save = function(articleNumber, callback) {
 */
 
 
-ArticleProvider.prototype.addSongToArticle = function(articleId, Song, callback) {
-  this.getCollection(function(error, article_collection) {
-    if( error ) callback( error );
-    else {
-      article_collection.update(
-        {_id: article_collection.db.bson_serializer.ObjectID.createFromHexString(articleId)},
-        {"$push": {songs: Song}},
-        function(error, article){
-          if( error ) callback(error);
-          else callback(null, article);
-        });
-    }
-  });
-};
 
 
-exports.ArticleProvider = ArticleProvider;
+

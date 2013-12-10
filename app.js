@@ -1,7 +1,9 @@
 // Uses functions in articleprovider-mongodb.js
 var express = require('express');
 var ArticleProvider = require('./articleprovider-mongodb').ArticleProvider;
-tools = require('./tools');
+var tools = require('./tools');
+//var chart = require('./public/javascript/abgtchart.js');
+
 //var ArticleProvider = require('./articleprovider-mongodb').ArticleProvider;
 
 // module.exports is the object that's returned as the result of the 'require' call
@@ -152,12 +154,25 @@ app.get('/episode/:id', function(req, res) {
 
 
 app.get('/test', function(req, res) {
+  // update data
+
+
+  // render 
+
+
+
+
   res.render('abgtproject.jade', {
     title: 'abgtProject'
   });
-  articleProvider.getTopNArtists(5, function(error, results) {
+  /*
+  abgtChart.updateTopFive(articleProvider, function(error, results) {
     console.log('in app.js');
   });
+  */
+
+
+  // This function should take the articleProvider object and use it to update website data
 
 
 
