@@ -2,6 +2,7 @@
 var express = require('express');
 var ArticleProvider = require('./articleprovider-mongodb').ArticleProvider;
 var tools = require('./tools');
+var cronJob = require('cron').CronJob;
 //var chart = require('./public/javascript/abgtchart.js');
 
 //var ArticleProvider = require('./articleprovider-mongodb').ArticleProvider;
@@ -36,8 +37,8 @@ app.configure('production', function(){
   app.use(express.errorHandler());
 });
 
-// Instantiate instance of ArticleProvider, passing it a host and port #
-//var articleProvider = new ArticleProvider('localhost', 27017);
+// Create instance of ArticleProvider, passing it a host and port #
+// ArticleProvider lets us easily interact with the DB
 var articleProvider = new ArticleProvider('localhost', 27017);
 
 
@@ -79,16 +80,15 @@ app.post('/', function(req, res) {
   /*
 
   TEMPORARY method of adding new episodes to the database.
-  Enventually, this will be done in t he background on an interval
+  Enventually, this will be done in the background on an interval
 
   */
 
-  //var episodeNumber = req.param("newEpisode");
+  // Construct URL based on input
   var episodeNumber = req.body.newEpisode;
   console.log("newEpisode= "+episodeNumber);
 
-
-
+  // Call scraping function
   tools.scrape(episodeNumber, function(article) {
       console.log("Scraped!");
       console.log(article);
@@ -96,48 +96,10 @@ app.post('/', function(req, res) {
         console.log('Article Saved!!!!!');
         console.log('Redirecting...');
         res.redirect('/');
-
       });
   });
-
-  // Construct URL based on input
-
-  // Call scraping function
-
-  
-  /*
-  articleProvider.save(episodeNumber, 
-    function(error) {
-      console.log("Redirecting");
-    res.redirect('/');
-  });
-*/
-  
-  
-
 });
 
-
-
-
-/* Submit new entry and redirect to home */
-/*
-app.post('/episode/new', function(req, res) {
-  // When user saves their post, call the save function, passing it the text 
-  // from the title and body form
-  console.log("HIT THE FUCNTION");
-  articleProvider.save({
-    // INSERT ACTUAL EPISODE SCHEMA HERE 
-
-
-
-    // title: req.param('title'),
-    // body: req.param('body')
-  }, function( error, docs) {
-    res.redirect('/')
-  });
-});
-*/
 
 // Show single episode
 app.get('/episode/:id', function(req, res) {
@@ -158,23 +120,9 @@ app.get('/test', function(req, res) {
 
 
   // render 
-
-
-
-
   res.render('abgtproject.jade', {
     title: 'abgtProject'
   });
-  /*
-  abgtChart.updateTopFive(articleProvider, function(error, results) {
-    console.log('in app.js');
-  });
-  */
-
-
-  // This function should take the articleProvider object and use it to update website data
-
-
 
   res.end();
 });
@@ -193,7 +141,38 @@ app.post('/blog/addComment', function(req, res) {
 });
 */
 
-/* PUT CODE FOR PUTTING FILE IN DATABASE HERE */
+/* 
+
+CRON JOB 
+
+*/
+
+var counter = (function() {
+   var id = 0; // This is the private persistent value
+   // The outer function returns a nested function that has access
+   // to the persistent value.  It is this nested function we're storing
+   // in the variable uniqueID above.
+   return function() { return id++; };  // Return and increment
+})(); // Invoke the outer function after defining it.
+
+try {
+      var job = new cronJob({
+        // Runs every Friday at 5:30PM EST
+        cronTime: '*/5 * * * * *',
+        onTick: function() {
+          console.log('howdy');
+          console.log( counter() );
+          //Scrape new episode
+          
+
+
+        },
+        start: false
+      });
+      job.start();
+    } catch(ex) {
+        console.log("cron pattern not valid");
+    }
 
 
 
