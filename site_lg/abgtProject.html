@@ -1,17 +1,14 @@
 <!--includes/links-->
 <script src="../scripts_lg/Chart.js-master/Chart.js"></script>
-<link rel="stylesheet" type="text/css" href="abgtproject.css" media="screen" />
+<script src="../scripts_lg/jquery-1.10.2.js"></script>
+<script src="../scripts_lg/selectBuilder.js"></script>
+
+<link rel="stylesheet" type="text/css" href="abgtproject.css"/>
 
 <!--start html-->
 <html>
-<!--bit of laziness, will move this to css in a bit-->
-<style type="text/css">
-	body {
-		background-color: #000;
-		}
-</style>
 <head>
-<title>abgtProject</title>
+<title>graphTherapy</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </head>
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
@@ -68,15 +65,16 @@
 		<td colspan="2" rowspan="4">
 			<img src="images/abgtProject_14.gif" width="83" height="337" alt=""></td>
 		<td colspan="3" rowspan="3" bgcolor="#3E3E3E">
-		
-		<!--here is the canvas that holds the charts-->
-		  <canvas id="myChart" width="287" height="287"></canvas>
-			<!--this script holds my placeholder chart-->
-          <script src="../scripts_lg/abgtchart.js"></script>
-            </td>
+        
+<!--here is the canvas that holds the charts-->
+			<canvas id="myChart" width="287" height="287"></canvas>
+            
+<!--this script holds my placeholder chart-->
+        	<script src="../scripts_lg/abgtchart.js"></script>
+        </td>
 		<td colspan="3" rowspan="3" bgcolor="#3E3E3E">
-		
-		<!--and this div holds my legend, most of the formatting has been moved to the css.-->
+        
+<!--and this div holds my legend, most of the formatting has been moved to the css.-->
 		  <div class="chartLegend">
             <ul>
             	<li class="artist1"> Above &amp; Beyond</li>
@@ -97,33 +95,33 @@
 	</tr>
 	<tr>
 		<td rowspan="7" bgcolor="#3E3E3E">
-        <select class= "selectdiv" name="episodes" size="22">
-        <option>Episode 1</option>
-        <option>Episode 2</option>
-        <option>Episode 3</option>
-        <option>Episode 4</option>
-        <option>Episode 5</option>
-        <option>Episode 6</option>
-        <option>Episode 7</option>
-        <option>Episode 8</option>
-        <option>Episode 9</option>
-        <option>Episode 10</option>
-        <option>Episode 11</option>
-        <option>Episode 12</option>
-        <option>Episode 13</option>
-        <option>Episode 14</option>
-        <option>Episode 15</option>
-        <option>Episode 16</option>
-        <option>Episode 17</option>
-        <option>Episode 18</option>
-        <option>Episode 19</option>
-        <option>Episode 20</option>
-        <option>Episode 21</option>
-        <option>Episode 22</option>
-        <option>Episode 23</option>
-        <option>Episode 24</option>
-        <option>Episode 25</option>
+        
+        <select size="22" class="selectdiv" id="episodes">
+        <script>
+        (function() {
+    	var elm = document.getElementById('episodes'),
+        df = document.createDocumentFragment();
+    	for (var i = 1; i <=56; i++) {
+        	var option = document.createElement('option');
+        	option.value = i;
+        	option.appendChild(document.createTextNode("Episode " + i));
+       		df.appendChild(option);
+    		}
+    	elm.appendChild(df);
+		}());
+		</script>
         </select>
+        
+        <!--AJAX-->
+        <script>
+        var episodeSelected;
+		$("#episodes").change(function(){
+		episodeSelected = $(this).val();
+		$("#text").val($(this).val());
+		}).change();
+		</script>
+        <!--END AJAX-->
+        
         </td>
 		<td>
 			<img src="images/spacer.gif" width="1" height="104" alt=""></td>
@@ -232,8 +230,11 @@
 		<td>
 			<img src="images/abgtProject_28.gif" width="172" height="22" alt=""></td>
 		<td colspan="8" bgcolor="#3E3E3E">
-        <div class="copyright" title="copyright">
-        Copyright 2013 Jackson Foley and Lucas Guild. The rights to all songs and albums listed on this site are property of their respective artists and record labels. The A&amp;B logo, Group Therapy, and Above and Beyond are all trademarks of Above and Beyond and the Anjunabeats organization. This site hosts and maintains data taken from aboveandbeyond.nu. No affiliation.</div>
+        
+<!-- Don't laught at my goofy copyright info. I don't want A&B to hate us.-->
+        	<div class="copyright" title="copyright">
+        	Copyright 2013 Jackson Foley and Lucas Guild. The rights to all songs and albums listed on this site are property of their respective artists and record labels. The A&amp;B logo, Group Therapy, and Above and Beyond are all trademarks of Above and Beyond and the Anjunabeats organization. This site hosts and maintains data taken from aboveandbeyond.nu. No affiliation.
+        	</div>
         </td>
 		<td>
 			<img src="images/spacer.gif" width="1" height="22" alt=""></td>
