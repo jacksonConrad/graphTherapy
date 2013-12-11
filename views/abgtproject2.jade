@@ -1,0 +1,221 @@
+// includes/links
+script(src='javascript/Chart.js-master/Chart.js')
+script(src='javascript/jquery-1.10.2.js')
+script(src='javascript/selectBuilder.js')
+
+// start html
+html
+  head
+    title graphTherapy
+    meta(http-equiv='Content-Type', content='text/html; charset=iso-8859-1')
+    link(rel='stylesheet', type='text/css', href='/stylesheets/abgtproject.css')
+  body(leftmargin='0', topmargin='0', marginwidth='0', marginheight='0')
+    // Save for Web Slices (abgtProject.psd)
+    // this giant table is my psd, hope jade doesnt fuck this up.
+    table#Table_01(width='1025', height='769', border='0', align='center', cellpadding='0', cellspacing='0')
+      tr
+        td(colspan='14')
+          img(src='images/abgtProject_01.gif', width='1024', height='8', alt='')
+        td
+          img(src='images/spacer.gif', width='1', height='8', alt='')
+      tr
+        td(rowspan='15')
+          img(src='images/abgtProject_02.gif', width='8', height='760', alt='')
+        td(colspan='7')
+          img(src='images/abgtProject_03.gif', width='347', height='134', alt='')
+        td(colspan='3')
+          img(src='images/logoSlice.jpg', width='315', height='134', alt='')
+        td(colspan='2')
+          img(src='images/abgtProject_05.gif', width='346', height='134', alt='')
+        td(rowspan='15')
+          img(src='images/abgtProject_06.gif', width='8', height='760', alt='')
+        td
+          img(src='images/spacer.gif', width='1', height='134', alt='')
+      tr
+        td(colspan='12')
+          img(src='images/abgtProject_07.gif', width='1008', height='8', alt='')
+        td
+          img(src='images/spacer.gif', width='1', height='8', alt='')
+      tr
+        td(colspan='3')
+          img(src='images/abgtProject_08.gif', width='203', height='12', alt='')
+        td(rowspan='13')
+          img(src='images/abgtProject_09.gif', width='5', height='618', alt='')
+        td(colspan='8', rowspan='2')
+          img(src='images/abgtProject_10.gif', width='800', height='45', alt='')
+        td
+          img(src='images/spacer.gif', width='1', height='12', alt='')
+      tr
+        td(rowspan='11')
+          img(src='images/abgtProject_11.gif', width='15', height='598', alt='')
+        td(rowspan='2')
+          img(src='images/episodeSelection.gif', width='172', height='153', alt='')
+        td(rowspan='11')
+          img(src='images/abgtProject_13.gif', width='16', height='598', alt='')
+        td
+          img(src='images/spacer.gif', width='1', height='33', alt='')
+      tr
+        td(colspan='2', rowspan='4')
+          img(src='images/abgtProject_14.gif', width='83', height='337', alt='')
+        td(colspan='3', rowspan='3', bgcolor='#3E3E3E')
+          // here is the canvas that holds the charts
+          canvas#myChart(width='287', height='287')
+          // this script holds my placeholder chart
+          script(src='javascript/abgtchart.js')
+
+        td(colspan='3', rowspan='3', bgcolor='#3E3E3E')
+          // and this div holds my legend, most of the formatting has been moved to the css.
+          div.chartLegend
+            ul
+              li.artist1  Above & Beyond
+              li.artist2  Mat Zo
+              li.artist3  Ilan Bluestone
+              li.artist4  Deadmau5
+        td
+          img(src='images/spacer.gif', width='1', height='120', alt='')
+      tr
+        td
+          img(src='images/linedPanel.gif', width='172', height='63', alt='')
+        td
+          img(src='images/spacer.gif', width='1', height='63', alt='')
+      tr
+        td(rowspan='7', bgcolor='#3E3E3E')
+          select#episodes.selectdiv(size='22')
+            script.
+              (function() {
+              var elm = document.getElementById('episodes'),
+              df = document.createDocumentFragment();
+              for (var i = 1; i <=56; i++) {
+              var option = document.createElement('option');
+              option.value = i;
+              option.appendChild(document.createTextNode("Episode " + i));
+              df.appendChild(option);
+              }
+              elm.appendChild(df);
+              }());
+
+          // AJAX
+          script.
+            var episodeSelected;
+            $("#episodes").change(function(){
+            episodeSelected = $(this).val();
+            $("#text").val($(this).val());
+            }).change();
+          // END AJAX
+
+        td
+          img(src='images/spacer.gif', width='1', height='104', alt='')
+      tr
+        td(colspan='6')
+          img(src='images/abgtProject_19.gif', width='717', height='50', alt='')
+        td
+          img(src='images/spacer.gif', width='1', height='50', alt='')
+      tr
+        td(colspan='8')
+          img(src='images/abgtProject_20.gif', width='800', height='15', alt='')
+        td
+          img(src='images/spacer.gif', width='1', height='15', alt='')
+      tr
+        td(colspan='4', bgcolor='#3E3E3E')
+          div.falseHeader #         Artist
+        td(colspan='4', bgcolor='#3E3E3E')
+          div.falseHeader2 Track
+        td
+          img(src='images/spacer.gif', width='1', height='27', alt='')
+      tr
+        td(rowspan='2')
+          img(src='images/abgtProject_23.gif', width='14', height='156', alt='')
+        td(colspan='6', bgcolor='#FFFFFF')
+          // New Table for Tracklist
+          #trackwrap
+            table#trackList(summary='Table for Episode Tracklist')
+              tbody
+                tr
+                  td 1
+                  td Above & Beyond
+                  td Love is Not Enough(Accoustic Mix)
+                tr
+                  td 2
+                  td Mat Zo
+                  td Bipolar(Original Mix)
+                tr
+                  td 3
+                  td Ilan Bluestone
+                  td Under My Skin(Club Mix)
+                tr
+                  td 4
+                  td Deadmau5
+                  td Suckfest 9000(Madeon Remix)
+                tr
+                  td 5
+                  td Placeholder
+                  td ?????
+                tr
+                  td 6
+                  td Placeholder
+                  td ?????
+                tr
+                  td 7
+                  td Placeholder
+                  td ?????
+        td(rowspan='2')
+          img(src='images/abgtProject_25.gif', width='20', height='156', alt='')
+        td
+          img(src='images/spacer.gif', width='1', height='144', alt='')
+      tr
+        td(colspan='6')
+          img(src='images/abgtProject_26.gif', width='766', height='12', alt='')
+        td
+          img(src='images/spacer.gif', width='1', height='12', alt='')
+      tr
+        td(colspan='8')
+          img(src='images/abgtProject_27.gif', width='800', height='8', alt='')
+        td
+          img(src='images/spacer.gif', width='1', height='8', alt='')
+      tr
+        td
+          img(src='images/abgtProject_28.gif', width='172', height='22', alt='')
+        td(colspan='8', bgcolor='#3E3E3E')
+          // Don't laught at my goofy copyright info. I don't want A&B to hate us.
+          .copyright(title='copyright')
+            | Copyright 2013 Jackson Foley and Lucas Guild. The rights to all songs and albums listed on this site are property of their respective artists and record labels. The A&B logo, Group Therapy, and Above and Beyond are all trademarks of Above and Beyond and the Anjunabeats organization. This site hosts and maintains data taken from aboveandbeyond.nu. No affiliation.
+        td
+          img(src='images/spacer.gif', width='1', height='22', alt='')
+      tr
+        td(colspan='3')
+          img(src='images/abgtProject_30.gif', width='203', height='8', alt='')
+        td(colspan='8')
+          img(src='images/abgtProject_31.gif', width='800', height='8', alt='')
+        td
+          img(src='images/spacer.gif', width='1', height='8', alt='')
+      tr
+        td
+          img(src='images/spacer.gif', width='8', height='1', alt='')
+        td
+          img(src='images/spacer.gif', width='15', height='1', alt='')
+        td
+          img(src='images/spacer.gif', width='172', height='1', alt='')
+        td
+          img(src='images/spacer.gif', width='16', height='1', alt='')
+        td
+          img(src='images/spacer.gif', width='5', height='1', alt='')
+        td
+          img(src='images/spacer.gif', width='14', height='1', alt='')
+        td
+          img(src='images/spacer.gif', width='69', height='1', alt='')
+        td
+          img(src='images/spacer.gif', width='56', height='1', alt='')
+        td
+          img(src='images/spacer.gif', width='104', height='1', alt='')
+        td
+          img(src='images/spacer.gif', width='127', height='1', alt='')
+        td
+          img(src='images/spacer.gif', width='84', height='1', alt='')
+        td
+          img(src='images/spacer.gif', width='326', height='1', alt='')
+        td
+          img(src='images/spacer.gif', width='20', height='1', alt='')
+        td
+          img(src='images/spacer.gif', width='8', height='1', alt='')
+        td
+    // End Save for Web Slices

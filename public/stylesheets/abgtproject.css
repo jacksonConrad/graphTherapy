@@ -1,4 +1,7 @@
 @charset "utf-8";
+body {
+  background-color: #000;
+}
 .chartLegend ul {
   list-style: none;
   width: 100%;
@@ -39,4 +42,50 @@
 }
 #Table_01 {
   color: #000;
+}
+.selectdiv {
+  width: 172px;
+  overflow: scroll;
+  height: 360px;
+  font-family: Century Gothic;
+}
+.copyright {
+  color: #fff;
+  font-size: 7px;
+  font-family: Century Gothic;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+#trackList {
+  font-family: Century Gothic;
+  font-size: 12px;
+  table-layout: auto;
+  border-collapse: collapse;
+  text-align: left;
+  width: 100%;
+}
+#trackList th {
+  padding: 9px 8px 8px;
+}
+#trackList td {
+  padding: 9px 8px 8px;
+  border-bottom: 1px solid #ccc;
+}
+#trackList tbody tr:hover td {
+  color: #09f;
+}
+#trackWrap {
+  overflow: auto;
+  height: 144px;
+  width: 766px;
+}
+.falseHeader {
+  color: White;
+  font-family: Century Gothic;
+  margin-left: 20px;
+}
+.falseHeader2 {
+  color: White;
+  font-family: Century Gothic;
+  margin-left: 66px;
 }

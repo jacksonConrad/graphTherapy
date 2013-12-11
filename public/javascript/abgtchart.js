@@ -14,7 +14,11 @@ var data = 	[
     		{
         		value : 10,
         		color : "#c62f29"
-    		}
+    		},
+            {
+                value : 3,
+                color : "#c62f78"
+            }
 			];
 var canvas = document.getElementById("myChart");
 var ctx = canvas.getContext("2d");

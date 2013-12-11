@@ -120,7 +120,7 @@ app.get('/test', function(req, res) {
 
 
   // render 
-  res.render('abgtproject.jade', {
+  res.render('abgtproject2.jade', {
     title: 'abgtProject'
   });
 
