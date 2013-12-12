@@ -3,7 +3,7 @@ var express = require('express');
 var ArticleProvider = require('./articleprovider-mongodb').ArticleProvider;
 var tools = require('./tools');
 var cronJob = require('cron').CronJob;
-//var chart = require('./public/javascript/abgtchart.js');
+//var data = require('./public/javascript/data.js');
 
 //var ArticleProvider = require('./articleprovider-mongodb').ArticleProvider;
 
@@ -116,15 +116,35 @@ app.get('/episode/:id', function(req, res) {
 
 
 app.get('/test', function(req, res) {
-  // update data
 
+  artists = [];
+  articleProvider.getTopNArtists(5, function(error, results) {
+    for (var i = results.length - 1; i >= 0; i--) {
+      artists[i] = results[i]._id; 
+    };
 
-  // render 
-  res.render('abgtproject2.jade', {
-    title: 'abgtProject'
+    // render 
+    res.render('abgtproject2.jade', {
+
+      title: 'abgtProject',
+      artists: artists
+    });
+
+    res.end();
   });
 
-  res.end();
+
+  
+});
+
+app.get('/api/getTopFive', function(req, res) {
+  //console.log('api');
+  articleProvider.getTopNArtists(5, function(error, results) {
+    console.log('GOT!');
+    res.json(results);
+    
+  });
+  
 });
 
 
@@ -148,7 +168,7 @@ CRON JOB
 */
 
 var counter = (function() {
-   var id = 0; // This is the private persistent value
+   var id = 1; // This is the private persistent value
    // The outer function returns a nested function that has access
    // to the persistent value.  It is this nested function we're storing
    // in the variable uniqueID above.
@@ -160,9 +180,24 @@ try {
         // Runs every Friday at 5:30PM EST
         cronTime: '*/5 * * * * *',
         onTick: function() {
-          console.log('howdy');
-          console.log( counter() );
+          //console.log('howdy');
+          //console.log( counter() );
+
+
+
           //Scrape new episode
+          /*
+          var count = counter();
+          tools.scrape( count, function(article) {
+            console.log("Scraped!");
+            console.log(article);
+            articleProvider.save(article, function() {
+              console.log('Article Saved!!!!!');
+            });
+          });
+          */
+
+          
           
 
 

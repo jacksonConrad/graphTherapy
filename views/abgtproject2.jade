@@ -67,10 +67,8 @@ html
           // and this div holds my legend, most of the formatting has been moved to the css.
           div.chartLegend
             ul
-              li.artist1  Above & Beyond
-              li.artist2  Mat Zo
-              li.artist3  Ilan Bluestone
-              li.artist4  Deadmau5
+            - each artist in artists
+              li.artist1=  artist
         td
           img(src='images/spacer.gif', width='1', height='120', alt='')
       tr
@@ -102,6 +100,7 @@ html
             $("#text").val($(this).val());
             }).change();
           // END AJAX
+            
 
         td
           img(src='images/spacer.gif', width='1', height='104', alt='')

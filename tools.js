@@ -52,6 +52,14 @@ exports.scrape = function (episodeNumber, callback) {
 	            for(var i = 0; i<lines.length; i++) {
 	            	//console.log(lines[i]);
 
+                    // Insert a space after each ']', ')', and '"'
+        /*
+                    for(var j = lines[i].length -1 ; j>0 ; j--) {
+                        if(lines[i].charAt(j).match('[\]]|[)]|["]'))
+                            lines[i].splice
+                    }
+        */
+
 	                parseLine(lines[i], function(words) {
 	                    //console.log(words);
 	                    if(words == null)
@@ -78,7 +86,7 @@ exports.scrape = function (episodeNumber, callback) {
 //Given a line, create an array of words
 var parseLine = function (line, callback) {
 //console.log(line);
-var words = line.split(' ');
+var words = line.split(' ');    
 if(words[0].charAt(0).match('[0-9]')) {
 	callback(words);
 }
@@ -130,50 +138,83 @@ var parseWords = function (words, callback) {
                 if(words[j].charAt(0).match('[a-z]|[A-Z]') ) {
                     //console.log("artist loop!");
                     //console.log(words[j]);
-
-                    while(words[j].charAt(0) != '"') {
-                        //console.log(words[j].charAt(0));
-                        //console.log(words[j]);
-                        artist += words[j] + ' ';
-                        j++;
+                    try{
+                        while(words[j].charAt(0) != '"') {
+                            //console.log(words[j].charAt(0));
+                            //console.log(words[j]);
+                            artist += words[j] + ' ';
+                            j++;
+                        }
                     }
+                    catch(e) {
+                        console.log('ERROR: formatting');
+                        console.log(e);
+                        return;
+                    }
+
                     j--;
 
                     Song.artist = artist.trim();
-                    console.log('artist: ' + Song.artist.trim());
+                    //console.log('artist: ' + Song.artist.trim());
                     //console.log('j: ' + j);
                 }
                 else if(start == '"') {
-                    while(words[j].substring(words[j].length - 1) != '\"') {
-                        //do things
-                        song += words[j] + ' ';
-                        j++;
+
+
+                    try{
+                        while(words[j].substring(words[j].length - 1) != '\"') {
+                            //do things
+                            song += words[j] + ' ';
+                            j++;
+                        }
                     }
+                    catch(e) {
+                        console.log('ERROR: formatting');
+                        console.log(e);
+                        return;
+                    }   
                     song += words[j];
                     Song.song = song;
 
-                    console.log("Song: " + Song.song);
+                    //console.log("Song: " + Song.song);
                 }
                 else if(start == '[') {
-                    console.log('remix loop');
+                    //console.log('remix loop');
                     song += ' ';
-                    while(words[j].substring(words[j].length - 1) != ']') {
-                        //do things
-                        song += words[j] + ' ';
-                        j++;
+
+                    try {
+                        while(words[j].substring(words[j].length - 1) != ']') {
+                            //do things
+                            song += words[j] + ' ';
+                            j++;
+                        }
+                    } catch(e) {
+                        console.log('ERROR: formatting');
+                        console.log(e);
+                        return;
                     }
+
                     song += words[j];
 
                     Song.song = song;
-                    console.log('song: ' + Song.song);
+                    //console.log('song: ' + Song.song);
 
                 }
                 else if( start == '(' ) {
-                    while(words[j].substring(words[j].length - 1) != ')' ) {
+                    try{
+                    while( (words[j].substring(words[j].length - 1) != ')') && 
+                        (words[j].substring(words[j].length - 1) != ']') ) {
                         //do things
+                        //console.log('DEBUG: ' + words[j]);
+                        //console.log('DEBUG: last character: ' +words[j].substring(words[j].length - 1));
                         label += words[j] + ' ';
 
                         j++;
+                    }
+                    } catch(e) {
+                        console.log('ERROR: formatting');
+                        console.log(e);
+                        return;
                     }
                     //if(end == ')')
                     
@@ -184,6 +225,7 @@ var parseWords = function (words, callback) {
                 } 
                 else {
                     console.log("ERROR: default case executed");
+                    console.log(words[j]);
                     return;
                 }
                 //console.log('break');
@@ -192,7 +234,7 @@ var parseWords = function (words, callback) {
             }
         }
     }
-    console.log(Song);
+    //console.log(Song);
     callback(Song);
 }
 

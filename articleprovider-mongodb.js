@@ -20,7 +20,6 @@ ArticleProvider.prototype.getCollection= function(callback) {
 };
 
 ArticleProvider.prototype.findAll = function(callback) {
-
     this.getCollection(function(error, article_collection) {
 
       if( error ) callback(error)
@@ -54,32 +53,32 @@ ArticleProvider.prototype.getTopNArtists = function(N, callback) {
       // Execute aggregate, notice the pipeline is expressed as an Array
       collection.aggregate([
           { $project: {
+            //  For each document in the collection, throw-out the episode number, keep the array of songs
             songs: 1
              }
-            
           },
           {
+            //Peels off the elements of the array individually, and returns a stream of documents. 
+            //$unwind returns one document for every member of the unwound array within every 
+            //source document.
             $unwind: "$songs"
           },
           {
-
+            //Groups documents based on artist name. Tally the play count for each duplicate artist
             $group: {
               _id: "$songs.artist",
               totalPlays: {$sum: 1}
-
             }
           },
+            //Sort the documents based on total plays in descending order
           { $sort: { totalPlays: -1}
           },
-          { $limit: 7 }
-          
-         
+            //Limit the documents to the first N
+          { $limit: N }
         ], function(err, result) {
           console.dir(result);
           callback(null, result);
-          //db.close();
       });
-
   });
 };
 
