@@ -35,3 +35,20 @@ body {
 	height:266;
 	background:#252525;
 }
+
+#copyright{
+	width:1024;
+	height:27;
+	font-size:9px;
+	background:#252525;
+	color:#FFFFFF;
+	font-family:Century Gothic;
+}
+
+#copyrightText{
+	margin-top:2px;
+	margin-bottom:2px;
+	margin-left:2px;
+	margin-right:2px;
+	text-align:center;
+}
