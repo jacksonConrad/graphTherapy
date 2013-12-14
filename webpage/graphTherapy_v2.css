@@ -5,3 +5,33 @@ body {
 	background-color: #000;
 	margin-top:0px;
 }
+
+#dataTable{
+	font-family:Century Gothic;
+	font-size:12px;
+	table-layout:auto;
+	border-collapse:collapse;
+	text-align:left;
+	width:100%;
+}
+#dataTable th{
+	padding: 9px 8px 8px;
+}
+#dataTable td{
+	padding: 9px 8px 8px;
+	border-bottom: 1px solid #ccc
+}
+#tableWrapper{
+	overflow:auto;
+	height:194px;
+	width:980px;
+}
+#dataTable tbody tr:hover  td{
+	color: #09F;
+}
+
+#bodyWrapper{
+	width:910;
+	height:266;
+	background:#252525;
+}
