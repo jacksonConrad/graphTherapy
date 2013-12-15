@@ -1,4 +1,4 @@
-<html>
+<html ng-app="graphTherapyApp">
 <head>
 <title>Graph Therapy</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -39,12 +39,12 @@
 			<img src="images/graphTherapy_v2_09.gif" width="22" height="288" alt=""></td>
 		<td colspan="3">
         
-<!-- Div wrapper for central box/body content ------------------->
+<!-- Div wrapper for central box/body content                                         -->
 
 			<div id="bodyWrapper">
             </div>
             
-<!--------------------------------------------------------------->
+<!--                                                                                  -->
             </td>
 		<td rowspan="2">
 			<img src="images/graphTherapy_v2_11.gif" width="22" height="288" alt=""></td>
@@ -62,45 +62,15 @@
 			<img src="images/graphTherapy_v2_14.jpg" width="22" height="212" alt=""></td>
 		<td colspan="7" bgcolor="#FFFFFF">
         
-<!--- Table Wrapper and Object ---------------------------------->
- 
+<!--- Table Wrapper and Object                                                        -->
+ 			<div ng-controller="tweetsCtrl">
 			<div id="tableWrapper">
             <table id="dataTable">
             	<tbody>
-        			<tr>
-            			<td>1</td>
-                		<td>Placeholder</td>
-                		<td>This is sample data. I don't know what will be in this table. FTFY.</td>
-            		</tr>
-                    <tr>
-            			<td>2</td>
-                		<td>Placeholder</td>
-                		<td>This is sample data. I don't know what will be in this table. FTFY.</td>
-            		</tr>
-                    <tr>
-            			<td>3</td>
-                		<td>Placeholder</td>
-                		<td>This is sample data. I don't know what will be in this table. FTFY.</td>
-            		</tr>
-                    <tr>
-            			<td>4</td>
-                		<td>Placeholder</td>
-                		<td>This is sample data. I don't know what will be in this table. FTFY.</td>
-            		</tr>
-                    <tr>
-            			<td>5</td>
-                		<td>Placeholder</td>
-                		<td>This is sample data. I don't know what will be in this table. FTFY.</td>
-            		</tr>
-                    <tr>
-            			<td>6</td>
-                		<td>Placeholder</td>
-                		<td>This is sample data. I don't know what will be in this table. FTFY.</td>
-            		</tr>
-                    <tr>
-            			<td>7</td>
-                		<td>Placeholder</td>
-                		<td>This is sample data. I don't know what will be in this table. FTFY.</td>
+        			<tr ng-repeat="tweet in tweets | limitTo: 20">
+            			<td>{{ tweet.id }}</td>
+                		<td>{{ tweet.user }}</td>
+                		<td>{{ tweet.text }}</td>
             		</tr>
                 </tbody>
             </table>
@@ -108,7 +78,7 @@
         </td>
 		<td rowspan="2">
         
-<!--------------------------------------------------------------->
+<!--                                                                                - -->
 			<img src="images/graphTherapy_v2_16.jpg" width="22" height="212" alt=""></td>
 	</tr>
 	<tr>
@@ -118,15 +88,15 @@
 	<tr>
 		<td colspan="9">
         
-<!-- Copyright text and divs for bottom runner ------------------>
+<!-- Copyright text and divs for bottom runner                                        -->
 
         	<div id="copyright">
             	<div id="copyrightText">
-Copyright 2013 Jackson Foley and Lucas Guild. The rights to all songs and albums listed on this site are property of their respective artists and record labels. The A&amp;B logo, Group Therapy, and Above and Beyond are all trademarks of Above and Beyond and the Anjunabeats organization. This site hosts and maintains data taken from aboveandbeyond.nu and twitter.com. Tweet data provided by Twitter. No affiliation.
+Copyright 2013 Jackson Foley and Lucas Guild. The rights to all songs and albums listed on this site are property of their respective artists and record labels. The A&amp;B logo, Group Therapy, and Above and Beyond are all trademarks of Above and Beyond and the Anjunabeats organization. This site hosts and maintains data taken from aboveandbeyond.nu and twitter.com. Tweet data provided by Twitter Streaming API. No affiliation.
 				</div>
 			</div>
             
-<!--------------------------------------------------------------->
+<!--                                                                                 -->
 		</td>
 	</tr>
 	<tr>
@@ -150,7 +120,7 @@ Copyright 2013 Jackson Foley and Lucas Guild. The rights to all songs and albums
 			<img src="images/spacer.gif" width="22" height="1" alt=""></td>
 	</tr>
 </table>
-<!-- End Save for Web Slices -->
+<!-- End Save for Web Slices                                                         -->
 
 </body>
 </html>
