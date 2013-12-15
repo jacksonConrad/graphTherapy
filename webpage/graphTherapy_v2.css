@@ -6,6 +6,10 @@ body {
 	margin-top:0px;
 }
 
+#tableBack{
+	background-image:url('images/graphTherapy_v2_15.jpg');
+}
+
 #dataTable{
 	font-family:Century Gothic;
 	font-size:12px;
