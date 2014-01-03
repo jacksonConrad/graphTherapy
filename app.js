@@ -1,222 +1,54 @@
 // Uses functions in articleprovider-mongodb.js
-var express = require('express');
-var ArticleProvider = require('./articleprovider-mongodb').ArticleProvider;
-var tools = require('./tools');
-var cronJob = require('cron').CronJob;
-//var data = require('./public/javascript/data.js');
+var express  = require('express'),
+port         = process.env.PORT || 3000,
+io           = require('socket.io'),
+mongoose     = require('mongoose'),
+http         = require('http'),
+twitter      = require('ntwitter');
 
-//var ArticleProvider = require('./articleprovider-mongodb').ArticleProvider;
+var configDB = require('./config/database.js');
 
-// module.exports is the object that's returned as the result of the 'require' call
-var app = module.exports = express();
+var app      = express();
+
+// Create the HTTP server with the express app as an argument
+// to pass to io object
+var server   = http.createServer(app);
 
 // Configuration
-app.configure(function(){
-  app.set('views', __dirname + '/views');
-  app.set('view engine', 'jade');
-  app.use(express.bodyParser());
-  app.use(express.methodOverride());
-  app.use(require('stylus').middleware({ src: __dirname + '/public' }));
-  app.use(app.router);
-  app.use(express.static(__dirname + '/public'));
-});
 
-/*  
+mongoose.connect(configDB.url); // connect to our database
 
-SEPERATE CONFIGS FOR DEV & PROD ENVIRONMENTS
+// set up our express application
+app.use(express.logger('dev')); // log every request to the console
+app.use(express.bodyParser()); // get information from html forms
 
-*/
-
-// Dev Env - for debugging
-app.configure('development', function(){
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-});
-
-// Prod Env
-app.configure('production', function(){
-  app.use(express.errorHandler());
-});
-
-// Create instance of ArticleProvider, passing it a host and port #
-// ArticleProvider lets us easily interact with the DB
-var articleProvider = new ArticleProvider('localhost', 27017);
-
+// Serve static files
+ 
+app.set('port', port);
+app.use("/js", express.static(__dirname + "/public/js"));
+app.use("/css", express.static(__dirname + "/public/css"));
+app.use("/partials", express.static(__dirname + "/public/partials"));
+app.use("/lib", express.static(__dirname + "/public/lib"));
+app.use("/images", express.static(__dirname + "/public/images"));
 
 /* 
-
-
-ROUTES 
-
-
+  ROUTES 
 */
 
-// Home
-app.get('/', function(req, res){
-  //When we recieve GET request for URI: '/', find all documents and send them as the response
-  articleProvider.findAll(function(error, docs){
-      // res.render() is the callback for findAll
-      //res.writeHead(200, {'Content-Type': 'text/html'});
+// load the socket API and pass in our server & io object
+require('./api/twitterAPI.js')(twitter, io, server);
 
-      res.render('index.jade', {  
-        title: 'Group Therapy Episodes',
-        articles: docs
-        
-      });
-      res.end();
-/*
-      articleProvider.save(1,
-        function(error, article) {
-       //console.log('inside save callback')
-        } 
-      );
-  */
-      //console.log(req.body.newEpisode);
-
-  })
+// redirect all others to the index (HTML5 history)
+// essentially links up all the angularjs partials with their respective paths
+app.all("/*", function(req, res, next) {
+  //console.log('loading page');
+  res.sendfile("index.html", { root: __dirname + "/public" });
 });
 
-// Update database
-app.post('/', function(req, res) {
-  /*
+// LAUNCH *********************************************/
 
-  TEMPORARY method of adding new episodes to the database.
-  Enventually, this will be done in the background on an interval
 
-  */
-
-  // Construct URL based on input
-  var episodeNumber = req.body.newEpisode;
-  console.log("newEpisode= "+episodeNumber);
-
-  // Call scraping function
-  tools.scrape(episodeNumber, function(article) {
-      console.log("Scraped!");
-      console.log(article);
-      articleProvider.save(article, function() {
-        console.log('Article Saved!!!!!');
-        console.log('Redirecting...');
-        res.redirect('/');
-      });
-  });
+//Create the server
+server.listen(app.get('port'), function(){
+  console.log('Express server listening on port ' + app.get('port') );
 });
-
-
-// Show single episode
-app.get('/episode/:id', function(req, res) {
-    articleProvider.findById(req.params.id, function(error, article) {
-        res.render('episode_show.jade',
-        {
-          title: article.title,
-          article:article
-        }
-        );
-    });
-});
-
-
-
-app.get('/test', function(req, res) {
-
-  artists = [];
-  articleProvider.getTopNArtists(5, function(error, results) {
-    for (var i = results.length - 1; i >= 0; i--) {
-      artists[i] = results[i]._id; 
-    };
-
-    // render 
-    res.render('abgtproject2.jade', {
-
-      title: 'abgtProject',
-      artists: artists
-    });
-
-    res.end();
-  });
-
-
-  
-});
-
-app.get('/api/getTopFive', function(req, res) {
-  //console.log('api');
-  articleProvider.getTopNArtists(5, function(error, results) {
-    console.log('GOT!');
-    res.json(results);
-    
-  });
-  
-});
-
-
-/* Submit comment and redirect to 
-
-app.post('/blog/addComment', function(req, res) {
-    articleProvider.addSongToArticle(req.param('_id'), {
-        person: req.param('person'),
-        comment: req.param('comment'),
-        created_at: new Date()
-       } , function( error, docs) {
-           res.redirect('/blog/' + req.param('_id'))
-       });
-});
-*/
-
-/* 
-
-CRON JOB 
-
-*/
-
-var counter = (function() {
-   var id = 1; // This is the private persistent value
-   // The outer function returns a nested function that has access
-   // to the persistent value.  It is this nested function we're storing
-   // in the variable uniqueID above.
-   return function() { return id++; };  // Return and increment
-})(); // Invoke the outer function after defining it.
-
-try {
-      var job = new cronJob({
-        // Runs every Friday at 5:30PM EST
-        cronTime: '*/5 * * * * *',
-        onTick: function() {
-          //console.log('howdy');
-          //console.log( counter() );
-
-
-
-          //Scrape new episode
-          /*
-          var count = counter();
-          tools.scrape( count, function(article) {
-            console.log("Scraped!");
-            console.log(article);
-            articleProvider.save(article, function() {
-              console.log('Article Saved!!!!!');
-            });
-          });
-          */
-
-          
-          
-
-
-        },
-        start: false
-      });
-      job.start();
-    } catch(ex) {
-        console.log("cron pattern not valid");
-    }
-
-
-
-
-
-
-
-/*********************************************/
-
-// Listen on port 3000!!!
-app.listen(3000);
-console.log("Express server listening on port %d in %s mode", 3000, app.get('env') );
