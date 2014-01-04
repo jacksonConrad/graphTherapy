@@ -1,5 +1,7 @@
 // twitterAPI.js
-var _ = require('underscore');
+var _ = require('underscore'),
+mongoose = require('mongoose'),
+Tweet = require('./models/TweetModel');
 
 //Instantiate the twitter component
 
@@ -12,13 +14,13 @@ module.exports = function(twitter, io, server) {
  
   //Set the sockets.io configuration.
 
-  /*
+  
   //THIS IS NECESSARY ONLY FOR HEROKU!
   sockets.configure(function() {
     sockets.set('transports', ['xhr-polling']);
     sockets.set('polling duration', 10);
   });
-  */
+  
    
   //If the client just connected, give them fresh data!
   sockets.sockets.on('connection', function(socket) { 
@@ -69,9 +71,27 @@ module.exports = function(twitter, io, server) {
       //Make sure it was a valid tweet
       if (tweet.text !== undefined) {
    
-        //We're gunna do some indexOf comparisons and we want it to be case agnostic.
+        console.log('\n');
         console.log(tweet.user.screen_name + ' Says: ');
         console.log(tweet.text);
+        console.log('\n');
+        //console.log(tweet);
+        //console.log('\n\n');
+        /*
+        newTweet = new Tweet();
+        newTweet.created_at= tweet.created_at;
+        newTweet.id= tweet.id;
+        newTweet.text= tweet.text;
+        newTweet.in_reply_to_status_id= tweet.in_reply_to_status_id;
+        newTweet.in_reply_to_user_id= tweet.in_reply_to_user_id;
+        newTweet.in_reply_to_screen_name= tweet.in_reply_to_screen_name;
+        */
+
+        
+        
+        
+        
+        //We're gunna do some indexOf comparisons and we want it to be case agnostic.
         var text = tweet.text.toLowerCase();
    
         //Go through every symbol and see if it was mentioned. If so, increment its counter and
@@ -86,11 +106,44 @@ module.exports = function(twitter, io, server) {
    
         //If something was mentioned, increment the total counter and send the update to all the clients
         if (claimed) {
+
+          Tweet.create(
+          {
+            created_at             : tweet.created_at,
+            id                     : tweet.id,
+            text                   : tweet.text,
+            in_reply_to_status_id  : tweet.in_reply_to_status_id,
+            in_reply_to_user_id    : tweet.in_reply_to_user_id,
+            in_reply_to_screen_name: tweet.in_reply_to_screen_name,
+            user                   : 
+            {
+              id                          : tweet.user.id,
+              name                        : tweet.user.name,
+              screen_name                 : tweet.user.screen_name,
+              location                    : tweet.user.location,
+              description                 : tweet.user.description,
+              followers_count             : tweet.user.followers_count,
+              friends_count               : tweet.user.friends_count,
+              timezone                    : tweet.user.timezone,
+              profile_background_image_url: tweet.user.profile_background_image_url,
+              profile_image_url           : tweet.user.profile_image_url,
+              profile_banner_url          : tweet.user.profile_banner_url
+            }
+          }, 
+          function(err, result) {
+            if(err)
+              console.log("ERROR: unable to add tweet to the database");
+            else {
+              //console.log("Tweet saved");
+              //console.log(result);
+              //Send to all the clients
+              //sockets.sockets.emit('data', watchList);
+              
+            }
+          });
+
             //Increment total
-            watchList.total++;
-   
-            //Send to all the clients
-            sockets.sockets.emit('data', watchList);
+            watchList.total++;   
         }
       }
     });
