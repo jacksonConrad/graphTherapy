@@ -38,6 +38,9 @@ app.use("/images", express.static(__dirname + "/public/images"));
 // load the socket API and pass in our server & io object
 require('./api/twitterAPI.js')(twitter, io, server);
 
+// load the stat API
+require('./api/statAPI.js')(app);
+
 // redirect all others to the index (HTML5 history)
 // essentially links up all the angularjs partials with their respective paths
 app.all("/*", function(req, res, next) {
