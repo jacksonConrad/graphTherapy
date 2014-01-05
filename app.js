@@ -1,10 +1,12 @@
 // Uses functions in articleprovider-mongodb.js
-var express  = require('express'),
-port         = process.env.PORT || 3000,
-io           = require('socket.io'),
-mongoose     = require('mongoose'),
-http         = require('http'),
-twitter      = require('ntwitter');
+var express = require('express'),
+port        = process.env.PORT || 3000,
+io          = require('socket.io'),
+mongoose    = require('mongoose'),
+http        = require('http'),
+request     = require('request'),
+cronJob     = require('cron').CronJob,
+twitter     = require('ntwitter');
 
 var configDB = require('./config/database.js');
 
@@ -47,6 +49,29 @@ app.all("/*", function(req, res, next) {
   //console.log('loading page');
   res.sendfile("index.html", { root: __dirname + "/public" });
 });
+
+
+
+// Cronjob hack to keep heroku from shutting down our app
+
+try {
+  var job = new cronJob({
+    // Runs every hour
+    cronTime: '0 0 * * * *',
+    onTick: function() {
+    // Make a request to our heroku app page
+    request('http://www.graph-therapy.herokuapp.com', function(err, response, body) {
+      if (!error && response.statusCode == 200) {
+        console.log('reset herokuapp'); // log on success
+      }
+    });
+    },
+    start: false
+  });
+  job.start();
+} catch(ex) {
+    console.log("cron pattern not valid");
+}
 
 // LAUNCH *********************************************/
 
