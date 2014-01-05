@@ -61,7 +61,7 @@ try {
     onTick: function() {
     // Make a request to our heroku app page
     request('http://www.graph-therapy.herokuapp.com', function(err, response, body) {
-      if (!error && response.statusCode == 200) {
+      if (!err && response.statusCode == 200) {
         console.log('reset herokuapp'); // log on success
       }
     });
