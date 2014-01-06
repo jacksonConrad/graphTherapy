@@ -54,15 +54,17 @@ app.all("/*", function(req, res, next) {
 
 // Cronjob hack to keep heroku from shutting down our app
 
-try {
+
   var job = new cronJob({
-    // Runs every hour
+    // Runs every hour 
     cronTime: '0 */59 * * * *',
     onTick: function() {
+    var date = new Date();
     // Make a request to our heroku app page
     request('http://graph-therapy.herokuapp.com', function(err, response, body) {
       if (!err && response.statusCode == 200) {
-        console.log('reset herokuapp'); // log on success
+        console.log('reset herokuapp: ' + date.getHours() + ' ' + date.getMinutes() + ' ' + date.getSeconds() ); // log on success
+        console.log(response.statusCode);
       }
       else {
         console.log('CRON ERROR!');
@@ -74,9 +76,6 @@ try {
     start: false
   });
   job.start();
-} catch(ex) {
-    console.log("cron pattern not valid");
-}
 
 // LAUNCH *********************************************/
 
