@@ -57,7 +57,7 @@ app.all("/*", function(req, res, next) {
 try {
   var job = new cronJob({
     // Runs every hour
-    cronTime: '0 0 * * * *',
+    cronTime: '0 */59 * * * *',
     onTick: function() {
     // Make a request to our heroku app page
     request('http://graph-therapy.herokuapp.com', function(err, response, body) {
