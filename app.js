@@ -60,9 +60,14 @@ try {
     cronTime: '0 0 * * * *',
     onTick: function() {
     // Make a request to our heroku app page
-    request('http://www.graph-therapy.herokuapp.com', function(err, response, body) {
+    request('http://graph-therapy.herokuapp.com', function(err, response, body) {
       if (!err && response.statusCode == 200) {
         console.log('reset herokuapp'); // log on success
+      }
+      else {
+        console.log('CRON ERROR!');
+        console.log(err);
+        console.log(response.statusCode);
       }
     });
     },
