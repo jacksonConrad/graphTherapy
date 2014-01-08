@@ -23,15 +23,22 @@ body {
 }
 #dataTable td{
 	padding: 9px 8px 8px;
-	border-bottom: 1px solid #ccc
+	border-bottom: 1px solid #;
+	color: #FFFFFF;
 }
 #tableWrapper{
 	overflow:auto;
 	height:194px;
 	width:980px;
 }
+
+a{
+	color: inherit;
+	text-decoration: inherit;
+}
+
 #dataTable tbody tr:hover  td{
-	color: #09F;
+	color: #BAF9FA;
 }
 
 #bodyWrapper{

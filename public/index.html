@@ -68,8 +68,8 @@
             <table id="dataTable">
             	<tbody>
         			<tr ng-repeat="tweet in tweets | limitTo: 20">
-                		<td>{{ tweet.screen_name }}</td>
-                		<td>{{ tweet.text }}</td>
+                		<td>{{ tweet.user.screen_name }}</td>
+                		<td><a href = "http://twitter.com/{{ tweet.user.screen_name }}/status/{{ tweet.id }}">{{ tweet.text }}</a></td>
             		</tr>
                 </tbody>
             </table>

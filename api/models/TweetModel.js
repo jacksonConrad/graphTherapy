@@ -1,10 +1,14 @@
-var mongoose = require('mongoose'),
+var mongoose = require('mongoose');
+require('mongoose-long')(mongoose);
+SchemaTypes = mongoose.Schema.Types;
+
 Schema = mongoose.Schema;
 
 
 var tweetSchema = new Schema({
     created_at: Date,
-    id: Number,
+    id: {type: SchemaTypes.Long, min: 0, default: 0},
+    id_str: String,
     text: String,
     in_reply_to_status_id: String,
     in_reply_to_user_id: String,

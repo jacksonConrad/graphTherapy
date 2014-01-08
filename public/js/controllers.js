@@ -3,7 +3,7 @@
 
 /* Controllers */
 
-angular.module('graphTherapyApp.controllers', []);
+angular.module('graphTherapyApp.controllers', []).
 	controller('tweetsCtrl', function ($scope, $http, $rootScope, $location) {
 
 	    /*$scope.tweets = [];
@@ -23,18 +23,13 @@ angular.module('graphTherapyApp.controllers', []);
 	    };*/
 
 	    //new method of grabbing - the get looks different but it's just a shorthand of the same thing
-	    graphTherapyApp.loadTweets('tweetsGet', function($http) {
+	    
+	    	//var tweets  = {content:null};
 
-	    	var tweets  = {content:null};
-
-	    	$http.get('content.json').success(function(data) {
-
-	    		tweets.content = data;
+	    	$http.get('/api/getlast/:number').success(function(data) {
+	    		$scope.tweets = data;
 	    	});
-
-	    	return tweets;
-	    });
-	});
+	}).
 	controller('graph_A_Ctrl', function ($scope, $http) {
 	// write Ctrl here
 
