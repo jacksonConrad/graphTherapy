@@ -69,7 +69,7 @@
             	<tbody>
         			<tr ng-repeat="tweet in tweets | limitTo: 20">
                 		<td>{{ tweet.user.screen_name }}</td>
-                		<td><a href = "http://twitter.com/{{ tweet.user.screen_name }}/status/{{ tweet.id }}">{{ tweet.text }}</a></td>
+                		<td><a href = "http://twitter.com/{{ tweet.user.screen_name }}/status/{{ tweet.id }}" target="_newtab">{{ tweet.text }}</a></td>
             		</tr>
                 </tbody>
             </table>
