@@ -47,6 +47,10 @@ a{
 	background:#252525;
 }
 
+#myChart{
+	display: inline-block;
+}
+
 #copyright{
 	width:1024;
 	height:27;
