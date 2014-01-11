@@ -69,8 +69,9 @@
             <table id="dataTable">
             	<tbody>
         			<tr ng-repeat="tweet in tweets | limitTo: 20">
-        				<td><span id="pictureWrapper"><img src= "{{ tweet.user.profile_image_url }}" height="24px" width="24px"></span></td>
-                		<td>{{ tweet.user.screen_name }}</td>
+        				<td><div id= "dateFromNow">{{ tweet.created_at | fromNow }}</div></td>
+        				<td><a href = "http://twitter.com/{{ tweet.user.screen_name }}/" target="_newtab"><span id="pictureWrapper"><img src= "{{ tweet.user.profile_image_url }}" height="24px" width="24px"></span></a></td>
+                		<td><a href = "http://twitter.com/{{ tweet.user.screen_name }}/" target="_newtab">{{ tweet.user.screen_name }}</a></td>
                 		<td><a href = "http://twitter.com/{{ tweet.user.screen_name }}/status/{{ tweet.id }}" target="_newtab">{{ tweet.text }}</a></td>
             		</tr>
                 </tbody>
@@ -133,7 +134,6 @@ Copyright 2013 Jackson Foley and Lucas Guild. The rights to all songs and albums
 <script src="lib/xcharts/xcharts.js"></script>
 <script src="lib/xcharts/xcharts.css"></script>
 <script src="js/myChart.js"></script>
-
-
+<script src="js/moment.js"></script>
 
 </html>

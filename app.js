@@ -51,7 +51,6 @@ app.all("/*", function(req, res, next) {
 });
 
 
-
 // Cronjob hack to keep heroku from shutting down our app
 
 

@@ -6,26 +6,6 @@
 angular.module('graphTherapyApp.controllers', []).
 	controller('tweetsCtrl', function ($scope, $http, $rootScope, $location) {
 
-	    /*$scope.tweets = [];
-
-			$scope.loadTweets = function() {
-			//var httpRequest   = 
-			$http({
-	            method: 'GET',
-	            url: '/api/getlast/10'
-
-	        }).success(function (data, status, headers, config) {
-	            $scope.tweets = data;
-	            console.log(data);
-	        }).error(function (data, status, headers, config) {
-				console.log('error');
-			});;
-	    };*/
-
-	    //new method of grabbing - the get looks different but it's just a shorthand of the same thing
-	    
-	    	//var tweets  = {content:null};
-
 	    	$http.get('/api/getlast/:number').success(function(data) {
 	    		$scope.tweets = data;
 	    	});
@@ -35,3 +15,13 @@ angular.module('graphTherapyApp.controllers', []).
 
 
 	});
+
+/* Filters */
+
+//This sexy beast lets me use the momentjs library as a filter
+angular.module('graphTherapyApp').
+  filter('fromNow', function() {
+    return function(dateString) {
+      return moment(dateString).fromNow()
+    };
+  });
