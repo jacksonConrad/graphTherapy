@@ -69,6 +69,7 @@
             <table id="dataTable">
             	<tbody>
         			<tr ng-repeat="tweet in tweets | limitTo: 20">
+        				<td><span id="pictureWrapper"><img src= "{{ tweet.user.profile_image_url }}" height="24px" width="24px"></span></td>
                 		<td>{{ tweet.user.screen_name }}</td>
                 		<td><a href = "http://twitter.com/{{ tweet.user.screen_name }}/status/{{ tweet.id }}" target="_newtab">{{ tweet.text }}</a></td>
             		</tr>

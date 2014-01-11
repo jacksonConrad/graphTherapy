@@ -68,3 +68,8 @@ a{
 	margin-right:2px;
 	text-align:center;
 }
+
+#pictureWrapper{
+	border: 1px solid #FFFFFF;
+	display: inline-block;
+}
