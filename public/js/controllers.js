@@ -6,7 +6,7 @@
 angular.module('graphTherapyApp.controllers', []).
 	controller('tweetsCtrl', function ($scope, $http, $rootScope, $location) {
 
-	    	$http.get('/api/getlast/:number').success(function(data) {
+	    	$http.get('/api/getlast/20').success(function(data) {
 	    		$scope.tweets = data;
 	    	});
 	}).
