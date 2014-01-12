@@ -1,8 +1,16 @@
 @charset "utf-8";
 /* graphTherapy_v2 CSS */
 
+html {
+	background: url(../images/pixelBlack.jpg) no-repeat center center fixed;
+	-webkit-background-size: cover;
+  	-moz-background-size: cover;
+ 	-o-background-size: cover;
+  	background-size: cover;
+}
+
 body {
-	background-color: #000;
+	
 	margin-top:0px;
 }
 
@@ -49,14 +57,14 @@ a{
 
 #myChart{
 	display: inline-block;
+	margin-top: 0.3em;
+	margin-left: -1.5em;
 }
 
 #copyright{
 	width:1024;
 	height:27;
 	font-size:8px;
-	background:#252525;
-	color:#FFFFFF;
 	font-family:Century Gothic;
 	margin-top: -2px;
 }
@@ -67,6 +75,7 @@ a{
 	margin-left:2px;
 	margin-right:2px;
 	text-align:center;
+	color: #FFFFFF;
 }
 
 #pictureWrapper{
