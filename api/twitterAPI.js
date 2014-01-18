@@ -16,12 +16,12 @@ module.exports = function(twitter, io, server) {
 
   
   //THIS IS NECESSARY ONLY FOR HEROKU!
-  /*
+
   sockets.configure(function() {
     sockets.set('transports', ['xhr-polling']);
     sockets.set('polling duration', 10);
   });
-*/
+
   
    
   //If the client just connected, give them fresh data!
@@ -77,21 +77,6 @@ module.exports = function(twitter, io, server) {
         console.log(tweet.user.screen_name + ' Says: ');
         console.log(tweet.text);
         console.log('\n');
-        //console.log(tweet);
-        //console.log('\n\n');
-        /*
-        newTweet = new Tweet();
-        newTweet.created_at= tweet.created_at;
-        newTweet.id= tweet.id;
-        newTweet.text= tweet.text;
-        newTweet.in_reply_to_status_id= tweet.in_reply_to_status_id;
-        newTweet.in_reply_to_user_id= tweet.in_reply_to_user_id;
-        newTweet.in_reply_to_screen_name= tweet.in_reply_to_screen_name;
-        */
-
-        
-        
-        
         
         //We're gunna do some indexOf comparisons and we want it to be case agnostic.
         var text = tweet.text.toLowerCase();
