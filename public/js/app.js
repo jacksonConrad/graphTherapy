@@ -4,8 +4,8 @@
 
 var graphTherapyApp = angular.module('graphTherapyApp', [
 	'ngRoute',
-	'graphTherapyApp.controllers'
-//	'graphTherapyApp.filters',
+	'graphTherapyApp.controllers',
+//	'graphTherapyApp.filters'
 //	'graphTherapyApp.services',
 //	'graphTherapyApp.directives'
 ]).
