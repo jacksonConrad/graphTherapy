@@ -10,6 +10,7 @@ module.exports = function(twitter, io, server) {
   // SET UP SOCKET =============================================================
   
   //Start a Socket.IO listen
+  /*
   var sockets = io.listen(server);
  
   //Set the sockets.io configuration.
@@ -29,6 +30,7 @@ module.exports = function(twitter, io, server) {
       // socket.emit('data', watchList);
       console.log('\nclient connected!!!!!!!!!!\n');
   });
+  */
 
   // SET UP TWITTER STREAM ======================================================
 
