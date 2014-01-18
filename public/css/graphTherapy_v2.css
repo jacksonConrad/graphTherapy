@@ -2,11 +2,11 @@
 /* graphTherapy_v2 CSS */
 
 html {
-	background: url(../images/pixelBlack.jpg) no-repeat center center fixed;
+	background: url(../images/background_pattern.jpg) no-repeat center top scroll;
 	-webkit-background-size: cover;
   	-moz-background-size: cover;
  	-o-background-size: cover;
-  	background-size: cover;
+  	background-size: 1920px 1080px;
 }
 
 body {

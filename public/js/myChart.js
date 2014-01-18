@@ -4,7 +4,7 @@ var data = {
   "type": "line",
   "main": [
     {
-      "className": ".test",
+      "className": ".pizza",
       "data": [
         {
           "x": "2012-11-05",
