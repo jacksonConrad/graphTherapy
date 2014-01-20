@@ -50,15 +50,10 @@ a{
 }
 
 #bodyWrapper{
+	display: block;
 	width:910;
 	height:266;
 	background:#252525;
-}
-
-#myChart{
-	display: inline-block;
-	margin-top: 0.3em;
-	margin-left: -1.5em;
 }
 
 #copyright{
@@ -86,3 +81,9 @@ a{
 #dateFromNow{
 	font-size: 9px;
 }
+
+.chart rect {
+	fill: #BAF9FA;
+	stroke: #252525;
+}
+
