@@ -5,32 +5,22 @@ Tweet = require('./models/TweetModel');
 
 //Instantiate the twitter component
 
-module.exports = function(twitter, io, server) {
+module.exports = function(twitter, io) {
 
   // SET UP SOCKET =============================================================
-  
-  //Start a Socket.IO listen
-  /*
-  var sockets = io.listen(server);
- 
-  //Set the sockets.io configuration.
 
-  
   //THIS IS NECESSARY ONLY FOR HEROKU!
-
-  sockets.configure(function() {
-    sockets.set('transports', ['xhr-polling']);
-    sockets.set('polling duration', 10);
+/*
+  io.configure(function() {
+    io.set('transports', ['xhr-polling']);
+    io.set('polling duration', 10);
   });
+*/
 
-  
-   
-  //If the client just connected, give them fresh data!
-  sockets.sockets.on('connection', function(socket) { 
-      // socket.emit('data', watchList);
-      console.log('\nclient connected!!!!!!!!!!\n');
-  });
-  */
+// When the client connects, do stuff
+io.sockets.on('connection', function (socket) {
+  console.log('user connected!');
+});
 
   // SET UP TWITTER STREAM ======================================================
 
@@ -125,17 +115,43 @@ module.exports = function(twitter, io, server) {
             else {
               //console.log("Tweet saved");
               //console.log(result);
-              //Send to all the clients
-              //sockets.sockets.emit('data', watchList);
+              //Send tweet to all the clients
+              io.sockets.emit('tweet', result);
               
             }
           });
+          
+          //emit tweet to all clients
+          
 
-            //Increment total
-            watchList.total++;   
+          //Increment total
+          watchList.total++;   
         }
       }
     });
-  });
 
+    // Handle a disconnect
+    stream.on('end', function(response) {
+      console.log('ERR: stream ended');
+      //console.log(response);
+    });
+    
+
+    // Handle a silent disconnect from twitter
+    stream.on('destroy', function(response) {
+      console.log('ERR: stream destroyed');
+      console.log(response);
+    });
+
+    stream.on('limit', function(response) {
+      console.log('ERR: Limit reached');
+      console.log(response);
+    });
+
+    stream.on('error', function(response) {
+      console.log('ERROR');
+      console.log(resopnse);
+    });
+
+  });
 };

@@ -1,20 +1,18 @@
-// Uses functions in articleprovider-mongodb.js
+// Set up the server
 var express = require('express'),
+app         = express(),
 port        = process.env.PORT || 3000,
-io          = require('socket.io'),
-mongoose    = require('mongoose'),
-http        = require('http'),
+// Create the HTTP server with the express app as an argument
+// to pass to io object
+server      = require('http').createServer(app);
+
+// Require dependencies
+var mongoose= require('mongoose'),
 request     = require('request'),
 cronJob     = require('cron').CronJob,
 twitter     = require('ntwitter');
 
 var configDB = require('./config/database.js');
-
-var app      = express();
-
-// Create the HTTP server with the express app as an argument
-// to pass to io object
-var server   = http.createServer(app);
 
 // Configuration
 
@@ -33,12 +31,16 @@ app.use("/partials", express.static(__dirname + "/public/partials"));
 app.use("/lib", express.static(__dirname + "/public/lib"));
 app.use("/images", express.static(__dirname + "/public/images"));
 
+// LAUNCH *********************************************/
+
+io = require("socket.io").listen(server);
+
 /* 
   ROUTES 
 */
 
 // load the socket API and pass in our server & io object
-require('./api/twitterAPI.js')(twitter, io, server);
+require('./api/twitterAPI.js')(twitter, io);
 
 // load the stat API
 require('./api/statAPI.js')(app);
@@ -75,6 +77,10 @@ app.all("/*", function(req, res, next) {
     start: false
   });
   job.start();
+
+
+
+
 
 // LAUNCH *********************************************/
 

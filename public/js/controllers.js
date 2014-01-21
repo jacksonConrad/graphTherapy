@@ -3,11 +3,23 @@
 /* Controllers */
 
 angular.module('graphTherapyApp.controllers', []).
-	controller('tweetsCtrl', function ($scope, $http, $rootScope, $location) {
-
-		$http.get('/api/getlast/20').success(function(data) {
+	controller('tweetsCtrl', function ($scope, $http, $rootScope, $location, tweetService, socketService) {
+		$scope.tweets = tweetService.query();
+		/*
+		$http.get('/api/getlast/500').success(function(data) {
 			$scope.tweets = data;
 		});
+		*/
+	
+		socketService.on('tweet', function(latestTweet) {
+			console.dir(latestTweet);
+			$scope.tweets.pop();
+			$scope.tweets.unshift(latestTweet);
+			console.dir('TWEETS ARRAY IS THIS LONG:\n' + $scope.tweets.length + '\n');
+		});
+
+
+
 	}).
 	controller('graph_A_Ctrl', function ($scope, $http) {
 	// write Ctrl here

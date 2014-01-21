@@ -1,4 +1,4 @@
-'use strict';
+//'use strict';
 
 // Declare app level module which depends on filters, and services
 
@@ -6,7 +6,7 @@ var graphTherapyApp = angular.module('graphTherapyApp', [
 	'ngRoute',
 	'graphTherapyApp.controllers',
 //	'graphTherapyApp.filters'
-//	'graphTherapyApp.services',
+	'graphTherapyApp.services'
 //	'graphTherapyApp.directives'
 ]).
 /**
