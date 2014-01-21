@@ -33,7 +33,7 @@ app.use("/images", express.static(__dirname + "/public/images"));
 
 // LAUNCH *********************************************/
 
-io = require("socket.io").listen(server);
+io = require("socket.io").listen(server, {log: false});
 
 /* 
   ROUTES 
@@ -43,7 +43,7 @@ io = require("socket.io").listen(server);
 require('./api/twitterAPI.js')(twitter, io);
 
 // load the stat API
-require('./api/statAPI.js')(app);
+require('./api/statAPI.js')(app, io);
 
 // redirect all others to the index (HTML5 history)
 // essentially links up all the angularjs partials with their respective paths

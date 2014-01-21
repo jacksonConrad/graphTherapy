@@ -1,7 +1,7 @@
 // statAPI.js
 var Tweet = require('./models/TweetModel');
 
-module.exports = function(app) {
+module.exports = function(app, io) {
 
 	app.get('/api/getlast/:number', function(req, res) {
 		Tweet.find({})
