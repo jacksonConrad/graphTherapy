@@ -12,4 +12,8 @@ module.exports = function(app) {
 		});
 	});
 
+	app.get('/api/getHourData', function(req, res) {
+
+	});
+
 };
