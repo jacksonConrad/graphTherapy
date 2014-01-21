@@ -69,7 +69,7 @@
  			<div ng-controller="tweetsCtrl" id="tableWrapper">
             <table id="dataTable">
             	<tbody>
-        			<tr ng-repeat="tweet in tweets | limitTo: 20">
+        			<tr class = "animate" ng-repeat="tweet in tweets | limitTo: 20">
         				<td><div id= "dateFromNow">{{ tweet.created_at | fromNow }}</div></td>
         				<td><a href = "http://twitter.com/{{ tweet.user.screen_name }}/" target="_newtab"><span id="pictureWrapper"><img src= "{{ tweet.user.profile_image_url }}" height="24px" width="24px"></span></a></td>
                 		<td><a href = "http://twitter.com/{{ tweet.user.screen_name }}/" target="_newtab">{{ tweet.user.screen_name }}</a></td>
@@ -132,6 +132,7 @@ Copyright 2013 Jackson Foley and Lucas Guild. The rights to all songs and albums
 <script src="lib/angular/angular.js"></script>
 <script src="lib/angular/angular-route.min.js"></script>
 <script src="lib/angular/angular-resource.min.js"></script>
+<script src="lib/angular/angular-animate.js"></script>
 <!-- Import socket scripts -->
 <script src="/socket.io/socket.io.js"></script>
 <script src="js/clientSocket.js"></script>
@@ -143,6 +144,5 @@ Copyright 2013 Jackson Foley and Lucas Guild. The rights to all songs and albums
 <!-- Import d3 libs -->
 <script src="lib/d3-master/d3.js"></script>
 <script src="js/moment.js"></script>
-
 
 </html>

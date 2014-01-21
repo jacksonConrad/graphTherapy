@@ -87,3 +87,37 @@ a{
 	stroke: #252525;
 }
 
+.animate.ng-enter, 
+.animate.ng-leave, 
+.animate.ng-move {
+  -webkit-transition: 0.5s linear all;
+  transition: 0.5s linear all;
+  position:relative;
+}
+
+.animate.ng-enter {
+  left:-10px;
+  opacity:0;
+}
+.animate.ng-enter.ng-enter-active {
+  left:0;
+  opacity:1;
+}
+
+.animate.ng-leave {
+  left:0;
+  opacity:1;
+}
+.animate.ng-leave.ng-leave-active {
+  left:-10px;
+  opacity:0;
+}
+
+.animate.ng-move {
+  opacity:0.5;
+  top: 0px;
+}
+.animate.ng-move.ng-move-active {
+  opacity:1;
+  top: 20px;
+}
