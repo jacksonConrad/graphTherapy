@@ -1,6 +1,6 @@
 var t = 1297110663, // start time (seconds since epoch)
     v = 70, // start value (subscribers)
-    data = d3.range(45).map(next); // starting dataset
+    data = d3.range(60).map(next); // starting dataset
 
 function next() {
     return {
@@ -15,7 +15,7 @@ setInterval (function() {
 	redraw();
 },  1500);
 
-var w = 20,
+var w = 15,
 	h = 266;
 
 var x = d3.scale.linear()

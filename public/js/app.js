@@ -7,7 +7,7 @@ var graphTherapyApp = angular.module('graphTherapyApp', [
 	'graphTherapyApp.controllers',
 //	'graphTherapyApp.filters'
 	'graphTherapyApp.services',
-//	'graphTherapyApp.directives'
+	'graphTherapyApp.directives',
 	'ngAnimate'
 ]).
 /**

@@ -133,7 +133,7 @@ io.sockets.on('connection', function (socket) {
     // Handle a disconnect
     stream.on('end', function(response) {
       console.log('ERR: stream ended');
-      //console.log(response);
+      console.log(response);
     });
     
 

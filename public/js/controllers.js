@@ -3,7 +3,7 @@
 /* Controllers */
 
 angular.module('graphTherapyApp.controllers', []).
-	controller('tweetsCtrl', function ($scope, $http, $rootScope, $location, tweetService, socketService) {
+	controller('tweetsCtrl', function ($scope, $http, $rootScope, $location, tweetService, socketService, d3Service) {
 		$scope.tweets = tweetService.query();
 		/*
 		$http.get('/api/getlast/500').success(function(data) {
