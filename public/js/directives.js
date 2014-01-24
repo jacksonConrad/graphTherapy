@@ -3,21 +3,30 @@
 
 // Angular Directives
 angular.module('graphTherapyApp.directives', [])
-    .directive('d3Bars', function (d3Service) {
+    .directive('d3Bars', function (d3Service, socketService) {
     
     return {
 		restrict: 'EA',
-		scope: {},
+		scope: {
+        	data: '=' // bi-directional data-binding
+      	},
 		link: function (scope, element, attrs) {
 			d3Service.d3().then(function (d3) {
+
+			/*socketService.on('minutesBin', function (minutesBin) {
+				$scope.data = minutesBin;
+				console.dir('Got minutesBin!');
+				console.dir(minutesBin);
+			});*/
 
 			////////////////////
 			// Static Code //
 			////////////////////
 
-				var t = 1297110663; // start time (seconds since epoch)
+				/*var t = 1297110663; // start time (seconds since epoch)
 			    v = 70; // start value (subscribers)
 			    scope.data = d3.range(60).map(next); // starting dataset
+			    //console.dir(scope.data);
 
 				function next() {
 				    return {
@@ -31,6 +40,7 @@ angular.module('graphTherapyApp.directives', [])
 					scope.data.push(next());
 					scope.render(scope.data);
 				},  1500);
+*/
 				
 
 				var w = 15,
@@ -48,6 +58,7 @@ angular.module('graphTherapyApp.directives', [])
 					.attr("class", "chart")
 					.attr("width", w * scope.data.length)
 					.attr("height", h);
+
 
 
 
@@ -74,6 +85,12 @@ angular.module('graphTherapyApp.directives', [])
 					scope.render(scope.data);
 				});
 				*/
+			
+				// watch for data changes and re-render
+				scope.$watch('data', function(newVals, oldVals) {
+				  return scope.render(newVals);
+				}, true);
+			
 
 				scope.render = function(data) {
 					// our custom d3 code

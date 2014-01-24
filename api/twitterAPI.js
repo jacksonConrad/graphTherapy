@@ -17,11 +17,6 @@ module.exports = function(twitter, io) {
   });
 */
 
-// When the client connects, do stuff
-io.sockets.on('connection', function (socket) {
-  console.log('user connected!');
-});
-
   // SET UP TWITTER STREAM ======================================================
 
   var t = new twitter({

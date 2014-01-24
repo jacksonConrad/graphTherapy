@@ -54,8 +54,6 @@ app.all("/*", function(req, res, next) {
 
 
 // Cronjob hack to keep heroku from shutting down our app
-
-
   var job = new cronJob({
     // Runs every hour 
     cronTime: '0 */59 * * * *',

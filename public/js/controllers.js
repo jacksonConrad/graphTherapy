@@ -18,6 +18,12 @@ angular.module('graphTherapyApp.controllers', []).
 			console.dir('TWEETS ARRAY IS THIS LONG:\n' + $scope.tweets.length + '\n');
 		});
 
+		socketService.on('minutesBin', function (minutesBin) {
+			$scope.data = minutesBin;
+			console.dir('Got minutesBin!');
+			console.dir(minutesBin);
+		});
+
 
 
 	}).

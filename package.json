@@ -14,7 +14,8 @@
     "d3"           : "~3.3.13",
     "request"      : "*",
     "cron"         : "~1.0.1",
-    "mongoose-long": "~0.0.2"
+    "mongoose-long": "~0.0.2",
+    "async"        : "~0.2.10"
   },
   "engines"        : {
       "node"       : "0.10.19"
