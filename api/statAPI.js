@@ -85,10 +85,7 @@ module.exports = function(app, io) {
 				callback();
 				//console.log(minutesBin);
 			},
-			function (callback) {
-				console.log('hello');
-				//console.log(minutesBin);
-				
+			function (callback) {				
 				for (var i = 0; i<(59 - now); i++) {
 					// Rotate indexes until they are in the correct spot
 					minutesBin.unshift(minutesBin.pop());			
@@ -99,7 +96,7 @@ module.exports = function(app, io) {
 			// Final callback
 			function (err, results) {
 				console.log('minutesBin initialized!');
-				console.log(results[1]);
+				//console.log(results[1]);
 
 			}
 		);
