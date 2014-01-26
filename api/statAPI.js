@@ -20,6 +20,7 @@ daysBin    = [];
 min = 60;
 while (min--) {
     minutesBin[min] = {
+    	date: null,
     	time: min,
     	value: 0
     }
@@ -28,6 +29,7 @@ while (min--) {
 hour = 24;
 while (hour--) {
     hoursBin[hour] = {
+    	date: null,
     	time: hour,
     	value: 0
     }
@@ -36,7 +38,7 @@ while (hour--) {
 day = 28;
 while (day--) {
     daysBin[day] = {
-    	time: day,
+    	date: null,
     	value: 0
     }
 }
@@ -64,7 +66,146 @@ module.exports = function(app, io) {
 	// When the app starts, fill the bins.  
 	// This only happens once.
 	// Bins will be updated dynamically from here on out.
-	Tweet.find({'created_at': {$gte: Moment().hour( (Moment().hour() - 1) % 24 ).toJSON()}}, 
+	// 
+	async.parallel([
+		function (callback) {
+			// fill minutes array
+			minuteDataQuery();
+			callback(null, minutesBin);
+		},
+		function (callback) {
+			// fill hours array
+			hourDataQuery();
+			callback(null, hoursBin);
+		},		
+		function (callback) {
+			// fill days array
+			dayDataQuery();
+			callback(null, daysBin);
+
+		}], // final callback
+		function (err, results) {
+			// results[0], results[1], etc.
+			
+		});
+
+	
+
+	
+	setTimeListeners();
+
+	
+		
+		
+	// When the user connects, give him the data
+	io.sockets.on('connection', function (socket) {
+		socket.emit('minutesBin', minutesBin);
+		socket.emit('hoursBin', hoursBin);
+		socket.emit('daysBin', daysBin);
+	});
+};
+
+
+//////////////////
+// Private Fn's //
+//////////////////
+
+function emitMinute(callback) {
+	Tweet.find({'created_at': {$gte: Moment().subtract('minute', 1).toJSON()}}, 
+		'user.followers_count')
+	.exec(function(err, results) {
+		
+		minutesBin.push({
+			time: (minutesBin[59].time + 1) % 60,
+			value:results.length
+		});
+		minutesBin.shift();
+		
+		//console.log('IN EMIT MINUTE FUNCTION');
+		callback(minutesBin);
+	});
+}
+
+function emitHour(callback) {
+	Tweet.find({'created_at': {$gte: Moment().subtract('minute', 1).toJSON()}}, 
+		'user.followers_count')
+	.exec(function(err, results) {
+		
+		minutesBin.push({
+			time: (minutesBin[59].time + 1) % 60,
+			value:results.length
+		});
+		minutesBin.shift();
+		
+		//console.log('IN EMIT MINUTE FUNCTION');
+		callback(minutesBin);
+	});
+}
+
+function emitDay(callback) {
+	Tweet.find({'created_at': {$gte: Moment().subtract('minute', 1).toJSON()}}, 
+		'user.followers_count')
+	.exec(function(err, results) {
+		
+		minutesBin.push({
+			time: (minutesBin[59].time + 1) % 60,
+			value:results.length
+		});
+		minutesBin.shift();
+		
+		//console.log('IN EMIT MINUTE FUNCTION');
+		callback(minutesBin);
+	});
+}
+
+
+function setTimeListeners(callback) {
+	// emit new data every minute
+	setInterval(
+		// emit new data
+		emitMinute
+		// every minute
+		, 1000*60
+		// callback fn for 'emitMinute'
+		// This is how you pass args to initial function
+		// when using setInterval
+		, function (minutesBin) {
+			io.sockets.emit('minutesBin', minutesBin);
+			//console.log('minutesBin emitted');
+			//console.log(minutesBin);
+		}
+	);	
+
+	// emit data every hour
+	setInterval(
+		// emit new data
+		emitHour
+		// every hour
+		, 1000*60*60
+		, function (hoursBin) {
+			io.sockets.emit('hours', hoursBin);
+			//console.log('minutesBin emitted');
+			//console.log(minutesBin);
+		}
+	);	
+    // emit data every day
+	setInterval(
+		// emit new data
+		emitDay
+		// every day
+		, 1000*60*60*24
+		, function (daysBin) {
+			io.sockets.emit('daysBin', daysBin);
+			//console.log('minutesBin emitted');
+			//console.log(minutesBin);
+		}
+	);	
+}	
+
+
+
+function minuteDataQuery(callback) {
+	Tweet.find({'created_at': {$gte: Moment().subtract('hour', 1).toJSON()}}, 
 		'created_at user.followers_count')
 	.exec(function (err, results) {
 		// Use async module to execute operations in series
@@ -110,47 +251,99 @@ module.exports = function(app, io) {
 			}
 		);
 	});
+}
 
-	setInterval(
-		// emit new data
-		emitMinute
-		// every minute
-		, 1000*60
-		// callback fn for 'emitMinute'
-		// This is how you pass args to initial function
-		// when using setInterval
-		, function (minutesBin) {
-			io.sockets.emit('minutesBin', minutesBin);
-			//console.log('minutesBin emitted');
-			//console.log(minutesBin);
-		}
-	);		
-		
-		
-	// When the user connects, give him the data
-	io.sockets.on('connection', function (socket) {
-		socket.emit('minutesBin', minutesBin);
+function hourDataQuery(callback) {
+	Tweet.find({'created_at': {$gte: Moment().subtract('hour', 24).toJSON()}}, 
+		'created_at user.followers_count')
+	.exec(function (err, results) {
+		// Use async module to execute operations in series
+		// and pass results to a final callback
+		var now = Moment().hours();
+		//console.log('we are in minute: ' + now);
+		console.log('There have been ' + results.length + ' tweets in the past day');
+		// console.log(minutesBin);
+
+		async.series([
+			function (callback) {
+
+				// First, fill bins with the proper value where index corresponds to minutes
+				_.each(results, function (tweet) {
+					var bin = Moment( tweet.created_at ).hours();
+					//console.log()
+					if(bin != 0) {
+
+						//console.log(minutesBin[bin]);
+						hoursBin[bin].value++;
+						//console.log(bin);
+					}
+				});
+				callback();
+				//console.log(minutesBin);
+			},
+			// Second, rotate indexes
+			function (callback) {				
+				for (var i = 0; i<(23 - now); i++) {
+					// Rotate indexes until they are in the correct spot with respect to now
+					hoursBin.unshift(hoursBin.pop());			
+				}
+				callback(null, minutesBin);
+			}
+			],
+			// Final callback
+			function (err, results) {
+				console.log('hoursBin initialized!');
+				//console.log(results[1]);
+
+			}
+		);
 	});
-};
+}
 
+function dayDataQuery(callback) {
+	Tweet.find({'created_at': {$gte: Moment().subtract('day', 28).toJSON()}}, 
+		'created_at user.followers_count')
+	.exec(function (err, results) {
+		// Use async module to execute operations in series
+		// and pass results to a final callback
+		var now = Moment().days();
+		//console.log('we are in minute: ' + now);
+		console.log('There have been ' + results.length + ' tweets in the past 4 weeks');
+		// console.log(minutesBin);
 
-//////////////////
-// Private Fn's //
-//////////////////
+		async.series([
+			function (callback) {
 
-function emitMinute(callback) {
-	Tweet.find({'created_at': {$gte: Moment().minute( Moment().minute() - 1).toJSON()}}, 
-		'user.followers_count')
-	.exec(function(err, results) {
-		
-		minutesBin.push({
-			time: (minutesBin[59].time + 1) % 60,
-			value:results.length
-		});
-		minutesBin.shift();
-		
-		//console.log('IN EMIT MINUTE FUNCTION');
-		callback(minutesBin);
+				// First, fill bins with the proper value where index corresponds to minutes
+				_.each(results, function (tweet) {
+					var bin = Moment( tweet.created_at ).days();
+					//console.log()
+					if(bin != 0) {
+
+						//console.log(minutesBin[bin]);
+						daysBin[bin % 28].value++;
+						//console.log(bin);
+					}
+				});
+				callback();
+				//console.log(minutesBin);
+			},
+			// Second, rotate indexes
+			function (callback) {				
+				for (var i = 0; i<(27 - (now % 28)); i++) {
+					// Rotate indexes until they are in the correct spot with respect to now
+					daysBin.unshift(daysBin.pop());			
+				}
+				callback(null, daysBin);
+			}
+			],
+			// Final callback
+			function (err, results) {
+				console.log('daysBin initialized!');
+				//console.log(results[1]);
+
+			}
+		);
 	});
 }
 

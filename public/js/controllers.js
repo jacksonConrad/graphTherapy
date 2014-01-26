@@ -4,7 +4,9 @@ angular.module('graphTherapyApp.controllers', []).
 	controller('tweetsCtrl', function ($scope, $http, $rootScope, $location, tweetService, socketService, d3Service) {
 		$scope.tweets = tweetService.query();
 		$scope.mData  = new Array(60);
-		console.dir('$scope.mData: ' + $scope.mData);
+		$scope.hData  = new Array(24);
+		$scope.dData  = new Array(28);
+
 
 		setTimeout(function () {
 			console.log('TIMEOUT');
@@ -24,6 +26,24 @@ angular.module('graphTherapyApp.controllers', []).
 			$scope.mData = minutesBin;
 			console.dir('Got minutesBin!');
 			console.dir($scope.mData);
+			// render the graph when the data loads
+			//$scope.render($scope.data);	
+		});
+
+		// Every hour, update the data
+		socketService.on('hoursBin', function (hoursBin) {
+			$scope.hData = hoursBin;
+			console.dir('Got hoursBin!');
+			console.dir($scope.hData);
+			// render the graph when the data loads
+			//$scope.render($scope.data);	
+		});
+
+		// Every day, update the data
+		socketService.on('daysBin', function (daysBin) {
+			$scope.dData = daysBin;
+			console.dir('Got daysBin!');
+			console.dir($scope.dData);
 			// render the graph when the data loads
 			//$scope.render($scope.data);	
 		});
