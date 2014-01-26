@@ -12,13 +12,11 @@ var birthTime = Moment().toJSON();
 //console.log(Moment().hour( Moment().hour() - 1).toJSON() );
 //console.log(Moment().format('MMMM Do YYYY, h:mm:ss a'));
 
-// 60 bins total
-dataMin = {
-	time: 0,
-	value: 0
-};
 minutesBin = [];
-// Fill array with 0's
+hoursBin   = [];
+daysBin    = [];
+
+// Initialize minutesBin with 0's
 min = 60;
 while (min--) {
     minutesBin[min] = {
@@ -26,11 +24,23 @@ while (min--) {
     	value: 0
     }
 }
+// Initialize hoursBin with 0's
+hour = 24;
+while (hour--) {
+    hoursBin[hour] = {
+    	time: hour,
+    	value: 0
+    }
+}
+// Initialize daysBin with 0's
+day = 28;
+while (day--) {
+    daysBin[day] = {
+    	time: day,
+    	value: 0
+    }
+}
 
-
-
-hoursBin = [];
-daysBin = [];
 
 
 
@@ -54,7 +64,7 @@ module.exports = function(app, io) {
 	// When the app starts, fill the bins.  
 	// This only happens once.
 	// Bins will be updated dynamically from here on out.
-	Tweet.find({'created_at': {$gte: Moment().hour( Moment().hour() - 1).toJSON()}}, 
+	Tweet.find({'created_at': {$gte: Moment().hour( (Moment().hour() - 1) % 24 ).toJSON()}}, 
 		'created_at user.followers_count')
 	.exec(function (err, results) {
 		// Use async module to execute operations in series
@@ -67,6 +77,7 @@ module.exports = function(app, io) {
 		async.series([
 			function (callback) {
 
+				// First, fill bins with the proper value where index corresponds to minutes
 				_.each(results, function (tweet) {
 					var bin = Moment( tweet.created_at ).minutes();
 					//console.log()
@@ -76,18 +87,16 @@ module.exports = function(app, io) {
 						minutesBin[bin].value++;
 						//console.log(bin);
 					}
-				}
-				//console.log(bin);
-				
-				// Increment number of tweets in a particular minute
-				
-				);
+				});
 				callback();
 				//console.log(minutesBin);
 			},
+			// Second, rotate indexes
 			function (callback) {				
 				for (var i = 0; i<(59 - now); i++) {
-					// Rotate indexes until they are in the correct spot
+					// Rotate indexes until they are in the correct spot with respect to now
+					// i.e. if i started the app at 2:38, the array is rotated until the object
+					// with time: 38 is in the 0th index
 					minutesBin.unshift(minutesBin.pop());			
 				}
 				callback(null, minutesBin);
@@ -113,7 +122,7 @@ module.exports = function(app, io) {
 		, function (minutesBin) {
 			io.sockets.emit('minutesBin', minutesBin);
 			//console.log('minutesBin emitted');
-			console.log(minutesBin);
+			//console.log(minutesBin);
 		}
 	);		
 		
