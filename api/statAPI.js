@@ -39,6 +39,7 @@ day = 28;
 while (day--) {
     daysBin[day] = {
     	date: null,
+    	time: day,
     	value: 0
     }
 }
@@ -66,7 +67,11 @@ module.exports = function(app, io) {
 	// When the app starts, fill the bins.  
 	// This only happens once.
 	// Bins will be updated dynamically from here on out.
-	// 
+	
+	/////////////////////////////////////////////////////
+	// Initialize data to be maintained on the server //
+	/////////////////////////////////////////////////////
+
 	async.parallel([
 		function (callback) {
 			// fill minutes array
@@ -88,16 +93,14 @@ module.exports = function(app, io) {
 			// results[0], results[1], etc.
 			
 		});
-
 	
+	//////////////////////////////
+	// Initialize event timers //
+	//////////////////////////////
 
-	
-	setTimeListeners();
+	startCronJobs();
 
-	
-		
-		
-	// When the user connects, give him the data
+	// Serve clients data over a socket when they connect
 	io.sockets.on('connection', function (socket) {
 		socket.emit('minutesBin', minutesBin);
 		socket.emit('hoursBin', hoursBin);
@@ -109,6 +112,11 @@ module.exports = function(app, io) {
 //////////////////
 // Private Fn's //
 //////////////////
+
+
+////////////////////////////////////////
+// Functions executing on an interval //
+////////////////////////////////////////
 
 function emitMinute(callback) {
 	Tweet.find({'created_at': {$gte: Moment().subtract('minute', 1).toJSON()}}, 
@@ -158,8 +166,8 @@ function emitDay(callback) {
 	});
 }
 
-
-function setTimeListeners(callback) {
+// Initialize event timers
+function startCronJobs(callback) {
 	// emit new data every minute
 	setInterval(
 		// emit new data
@@ -203,6 +211,9 @@ function setTimeListeners(callback) {
 }	
 
 
+////////////////
+// DB Queries //
+////////////////
 
 function minuteDataQuery(callback) {
 	Tweet.find({'created_at': {$gte: Moment().subtract('hour', 1).toJSON()}}, 
@@ -222,12 +233,13 @@ function minuteDataQuery(callback) {
 				_.each(results, function (tweet) {
 					var bin = Moment( tweet.created_at ).minutes();
 					//console.log()
-					if(bin != 0) {
+					if(minutesBin[bin].date == null)
+						minutesBin[bin].date = Moment( tweet.created_at ).startOf('minute');
 
 						//console.log(minutesBin[bin]);
-						minutesBin[bin].value++;
+					minutesBin[bin].value++;
 						//console.log(bin);
-					}
+					
 				});
 				callback();
 				//console.log(minutesBin);
@@ -271,12 +283,12 @@ function hourDataQuery(callback) {
 				_.each(results, function (tweet) {
 					var bin = Moment( tweet.created_at ).hours();
 					//console.log()
-					if(bin != 0) {
-
+					if(hoursBin[bin].date == null)
+						hoursBin[bin].date = Moment( tweet.created_at ).startOf('hour');
 						//console.log(minutesBin[bin]);
-						hoursBin[bin].value++;
+					hoursBin[bin].value++;
 						//console.log(bin);
-					}
+					
 				});
 				callback();
 				//console.log(minutesBin);
@@ -317,14 +329,15 @@ function dayDataQuery(callback) {
 				// First, fill bins with the proper value where index corresponds to minutes
 				_.each(results, function (tweet) {
 					var bin = Moment( tweet.created_at ).days();
-					//console.log()
-					if(bin != 0) {
 
-						//console.log(minutesBin[bin]);
+						if(daysBin[bin % 28].date == null)
+							daysBin[bin % 28].date = Moment( tweet.created_at).startOf('day');
+
 						daysBin[bin % 28].value++;
-						//console.log(bin);
-					}
 				});
+
+
+
 				callback();
 				//console.log(minutesBin);
 			},
@@ -336,6 +349,9 @@ function dayDataQuery(callback) {
 				}
 				callback(null, daysBin);
 			}
+			,
+			// Third, assign date to each bin
+			function (callback) {}
 			],
 			// Final callback
 			function (err, results) {
@@ -346,30 +362,3 @@ function dayDataQuery(callback) {
 		);
 	});
 }
-
-
-
-
-	// When the app starts, fill the bins.  
-	// This only happens once.
-	// Bins will be updated dynamically from here on out.
-	/*
-	app.get('/api/minutes', function(req, res) {
-		Tweet.find({'created_at': {$gte: Moment().hour( Moment().hour() - 1).toJSON()}}, 
-			'created_at user.followers_count')
-		.sort({'created_at':-1})
-		.exec(function(err, results) {
-			//for(var i = 0; i<results.length; i++) {
-			_.each(results, function(tweet) {
-				var bin = Moment( tweet.created_at ).minutes() ;
-				//console.log('cuttoff time ' + Moment().hour( Moment().hour() - 1).format('MMMM Do YYYY, h:mm:ss a'));
-				//console.log('tweet time: ' + Moment( results[i].created_at ).format('MMMM Do YYYY, h:mm:ss a') );
-				//console.log('has minute: ' + bin);
-				minutesBin[bin]++;
-			});
-			//}
-			
-			res.json(minutesBin);
-		});
-	});
-	*/

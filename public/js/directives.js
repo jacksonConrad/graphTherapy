@@ -7,20 +7,20 @@ angular.module('graphTherapyApp.directives', [])
 		var w = 15,
 		h = 266;
 		console.log('OUTSIDE RETURN');
-		
+
 	    
 	    return {
 	    	restrict: 'EA',
 	    	terminal: true,
 	    	scope: {
 	    		// Bi-directional databinding
-	    		minData: '='
+	    		chartData: '='
 	    	},
 	    	link: function (scope, element, attrs) {
 				d3Service.d3()
 				.then(function (d3) {
 					console.log('INSIDE LINK FUNCTION');
-					console.log(scope.minData);
+					//console.dir(scope.chartData);
 
 
 
@@ -42,7 +42,7 @@ angular.module('graphTherapyApp.directives', [])
 
 				
 					// watch for data changes and re-render	
-					scope.$watch('minData', function (newVals, oldVals) {
+					scope.$watch('chartData', function (newVals, oldVals) {
 						// remove all previous items before render
 	    				svg.selectAll('*').remove();
 	    				console.log('INSIDE WATCH!!!');
