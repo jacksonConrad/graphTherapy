@@ -44,13 +44,12 @@
 		<td colspan="3">
         
 <!-- Div wrapper for central box/body content                                         -->
-			<select ng-model="selection" ng-options="opt as opt.label for opt in options">
-			</select>
-			<tt>selection={{selection.label}}</tt>
-			<hr/>
+			
+			
 
 			<div id="bodyWrapper">
-					<d3-bars chart-data="selection.data"></d3-bars>
+				<select ng-model="selection" ng-options="opt as opt.label for opt in options"></select>
+				<d3-bars chart-data="selection.data"></d3-bars>
             </div>
             
 <!--                                                                                  -->

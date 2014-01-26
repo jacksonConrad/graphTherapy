@@ -5,7 +5,7 @@ angular.module('graphTherapyApp.directives', [])
 
 	    // Constants
 		var w = 15,
-		h = 266;
+		h = 256;
 		console.log('OUTSIDE RETURN');
 
 	    
