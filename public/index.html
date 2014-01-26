@@ -44,15 +44,16 @@
 		<td colspan="3">
         
 <!-- Div wrapper for central box/body content                                         -->
+			
+			
 
 			<div id="bodyWrapper">
-				<d3-bars min-data="mData"></d3-bars>
-				<!--<script src="http://d3js.org/d3.v3.min.js"></script>
-				<script src="js/dynamicChart.js"></script>-->
+				<select ng-model="selection" ng-options="opt as opt.label for opt in options"></select>
+				<d3-bars chart-data="selection.data"></d3-bars>
             </div>
             
 <!--                                                                                  -->
-            </td>
+        </td>
 		<td rowspan="2">
 			<img src="images/graphTherapy_v2_11.gif" width="22" height="288" alt=""></td>
 	</tr>
@@ -139,6 +140,7 @@ Copyright 2013 Jackson Foley and Lucas Guild. The rights to all songs and albums
 <script src="lib/angular/angular-animate.js"></script>
 <!-- Import socket scripts -->
 <script src="/socket.io/socket.io.js"></script>
+<script src="js/moment.js"></script>
 <!--<script src="js/clientSocket.js"></script>-->
 
 <!-- Import angular scripts -->
@@ -146,10 +148,12 @@ Copyright 2013 Jackson Foley and Lucas Guild. The rights to all songs and albums
 <script src="js/directives.js"></script>
 <script src="js/controllers.js"></script>
 <script src="js/services.js"></script>
+<script src="js/filters.js"></script>
+
 
 
 <!-- Import d3 libs -->
 <!--<script src="lib/d3-master/d3.js"></script>-->
-<script src="js/moment.js"></script>
+
 
 </html>
