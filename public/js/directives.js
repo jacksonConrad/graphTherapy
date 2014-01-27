@@ -1,21 +1,28 @@
 /* Directives -----------------------------------------------------------------------------------------------------------------------------------------------*/
 // Angular Directives
 angular.module('graphTherapyApp.directives', [])
-    .directive('d3Bars', function (d3Service, socketService) {
+    .directive('d3Bars', function (d3Service) {
 
 	    // Constants
 		var w = 15,
 		h = 220;
 		console.log('OUTSIDE RETURN');
 
-	    
+		// Other helper functions
+
 	    return {
-	    	restrict: 'EA',
-	    	terminal: true,
+	    	restrict: 'E',
+	    	//terminal: true,
+	    	replace: false,
 	    	scope: {
 	    		// Bi-directional databinding
-	    		chartData: '='
+	    		chartData: '=chartData'
 	    	},
+
+	    	// Controller shared with all instantiated directives
+	    	/*controller: ['$scope', 'chartData', function ($scope, chartData) {
+
+	    	}],*/
 	    	link: function (scope, element, attrs) {
 				d3Service.d3()
 				.then(function (d3) {
@@ -57,38 +64,40 @@ angular.module('graphTherapyApp.directives', [])
 	    				svg.selectAll("rect")
 						    .data(newVals)
 						    .enter().append("rect")
-						    .attr("x", function(d, i) { return x(i) - .5; })
-						    .attr("y", function(d) { return h - y(d.value) - .5; })
+						    .attr("x", function (d, i) { return x(i) - .5; })
+						    .attr("y", function (d) { return h - y(d.value) - .5; })
 						    .attr("width", w)
-						    .attr("height", function(d) { return y(d.value); });
+						    .attr("height", function (d) { return y(d.value); });
 
 						svg.append("line")
 						    .attr("x1", 0)
 						    .attr("x2", w * newVals.length)
 						    .attr("y1", h - .5)
 						    .attr("y2", h - .5)
-						    .style("stroke", "#000");
+						    .style("stroke", "#FFF");
 
 
 						var rect = svg.selectAll("rect")
-							.data(newVals, function(d) { return d.time; });
+							.data(newVals, function (d) { return d.time; });
 
 						rect.enter().insert("rect", "line")
-							.attr("x", function(d, i) { return x(i + 1) - .5; })
-							.attr("y", function(d) { return h - y(d.value) - .5; })
+							.attr("x", function (d, i) { return x(i + 1) - .5; })
+							.attr("y", function (d) { return h - y(d.value) - .5; })
+							//.text(function (d) { return d} )
 							.attr("width", w)
-							.attr("height", function(d) { return y(d.value); })
+							.attr("height", function (d) { return y(d.value); })
 							.transition()
 							.duration(1000)
-							.attr("x", function(d, i) { return x(i) - .5; });
+							.attr("x", function (d, i) { return x(i) - .5; })
+							
 
 						rect.transition()
 							.duration(1000)
-							.attr("x", function(d, i) { return x(i) - .5; });
+							.attr("x", function (d, i) { return x(i) - .5; });
 
 						rect.exit().transition()
 							.duration(1000)
-							.attr("x", function(d, i) { return x(i - 1) - .5; })
+							.attr("x", function (d, i) { return x(i - 1) - .5; })
 							.remove();
 					});
 
