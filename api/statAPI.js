@@ -135,34 +135,34 @@ function emitMinute(callback) {
 }
 
 function emitHour(callback) {
-	Tweet.find({'created_at': {$gte: Moment().subtract('minute', 1).toJSON()}}, 
+	Tweet.find({'created_at': {$gte: Moment().subtract('hour', 1).toJSON()}}, 
 		'user.followers_count')
 	.exec(function(err, results) {
 		
-		minutesBin.push({
-			time: (minutesBin[59].time + 1) % 60,
+		hoursBin.push({
+			time: (hoursBin[23].time + 1) % 24,
 			value:results.length
 		});
-		minutesBin.shift();
+		hoursBin.shift();
 		
 		//console.log('IN EMIT MINUTE FUNCTION');
-		callback(minutesBin);
+		callback(hoursBin);
 	});
 }
 
 function emitDay(callback) {
-	Tweet.find({'created_at': {$gte: Moment().subtract('minute', 1).toJSON()}}, 
+	Tweet.find({'created_at': {$gte: Moment().subtract('day', 1).toJSON()}}, 
 		'user.followers_count')
 	.exec(function(err, results) {
 		
-		minutesBin.push({
-			time: (minutesBin[59].time + 1) % 60,
+		daysBin.push({
+			time: (daysBin[59].time + 1) % 28,
 			value:results.length
 		});
-		minutesBin.shift();
+		daysBin.shift();
 		
 		//console.log('IN EMIT MINUTE FUNCTION');
-		callback(minutesBin);
+		callback(daysBin);
 	});
 }
 
@@ -234,7 +234,7 @@ function minuteDataQuery(callback) {
 					var bin = Moment( tweet.created_at ).minutes();
 					//console.log()
 					if(minutesBin[bin].date == null)
-						minutesBin[bin].date = Moment( tweet.created_at ).startOf('minute');
+						minutesBin[bin].date = Moment( tweet.created_at ).startOf('minute').toJSON();
 
 						//console.log(minutesBin[bin]);
 					minutesBin[bin].value++;
@@ -268,6 +268,7 @@ function minuteDataQuery(callback) {
 function hourDataQuery(callback) {
 	Tweet.find({'created_at': {$gte: Moment().subtract('hour', 24).toJSON()}}, 
 		'created_at user.followers_count')
+	.sort({'created_at': -1})
 	.exec(function (err, results) {
 		// Use async module to execute operations in series
 		// and pass results to a final callback
@@ -282,31 +283,42 @@ function hourDataQuery(callback) {
 				// First, fill bins with the proper value where index corresponds to minutes
 				_.each(results, function (tweet) {
 					var bin = Moment( tweet.created_at ).hours();
-					//console.log()
-					if(hoursBin[bin].date == null)
-						hoursBin[bin].date = Moment( tweet.created_at ).startOf('hour');
+					//console.log(bin);
+					if(hoursBin[bin].date == null) {
+						hoursBin[bin].date = Moment( tweet.created_at ).startOf('hour').toJSON();
+						//console.log('herooooo');
+						//console.log(Moment( tweet.created_at ).startOf('hour').format('MMMM Do YYYY, h:mm:ss a'));
+					}
 						//console.log(minutesBin[bin]);
 					hoursBin[bin].value++;
 						//console.log(bin);
+					//console.log( Moment( tweet.created_at ).format('MMMM Do YYYY, h:mm:ss a') );
+
 					
 				});
 				callback();
 				//console.log(minutesBin);
 			},
 			// Second, rotate indexes
-			function (callback) {				
+			function (callback) {		
+				console.log(hoursBin);		
 				for (var i = 0; i<(23 - now); i++) {
 					// Rotate indexes until they are in the correct spot with respect to now
 					hoursBin.unshift(hoursBin.pop());			
 				}
-				callback(null, minutesBin);
+				callback(null, hoursBin);
 			}
 			],
 			// Final callback
 			function (err, results) {
 				console.log('hoursBin initialized!');
 				//console.log(results[1]);
-
+				for(var i = 0; i<24; i++) {
+					//console.log( Moment( results[1][i].date ).format('MMMM Do YYYY, h:mm:ss a') );
+					//console.log(results[1][i].time);
+				}
+				//console.log(results[1]);
+				
 			}
 		);
 	});
@@ -315,10 +327,11 @@ function hourDataQuery(callback) {
 function dayDataQuery(callback) {
 	Tweet.find({'created_at': {$gte: Moment().subtract('day', 28).toJSON()}}, 
 		'created_at user.followers_count')
+	.sort({'created_at': -1})
 	.exec(function (err, results) {
 		// Use async module to execute operations in series
 		// and pass results to a final callback
-		var now = Moment().days();
+		var now = Moment().dates();
 		//console.log('we are in minute: ' + now);
 		console.log('There have been ' + results.length + ' tweets in the past 4 weeks');
 		// console.log(minutesBin);
@@ -328,30 +341,30 @@ function dayDataQuery(callback) {
 
 				// First, fill bins with the proper value where index corresponds to minutes
 				_.each(results, function (tweet) {
-					var bin = Moment( tweet.created_at ).days();
+					var bin = Moment( tweet.created_at ).dates();
+					// console.log(bin);
 
 						if(daysBin[bin % 28].date == null)
-							daysBin[bin % 28].date = Moment( tweet.created_at).startOf('day');
+							daysBin[bin % 28].date = Moment( tweet.created_at).startOf('day').toJSON();
 
 						daysBin[bin % 28].value++;
 				});
 
-
+				//console.log('hello');
 
 				callback();
 				//console.log(minutesBin);
 			},
 			// Second, rotate indexes
-			function (callback) {				
+			function (callback) {
+			/*				
 				for (var i = 0; i<(27 - (now % 28)); i++) {
 					// Rotate indexes until they are in the correct spot with respect to now
 					daysBin.unshift(daysBin.pop());			
 				}
+			*/	//console.log('hello
 				callback(null, daysBin);
 			}
-			,
-			// Third, assign date to each bin
-			function (callback) {}
 			],
 			// Final callback
 			function (err, results) {

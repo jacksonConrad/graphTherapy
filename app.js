@@ -1,7 +1,7 @@
 // Set up the server
 var express = require('express'),
 app         = express(),
-port        = process.env.PORT || 3000,
+port        = process.env.PORT || 4000,
 // Create the HTTP server with the express app as an argument
 // to pass to io object
 server      = require('http').createServer(app);
