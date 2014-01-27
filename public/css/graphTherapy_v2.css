@@ -50,10 +50,11 @@ a{
 }
 
 #bodyWrapper{
-	/*display: block;*/
+	display: block;
 	width:910;
 	height:220;
 	background:#252525;
+	padding-top: 20px;
 }
 
 #copyright{
