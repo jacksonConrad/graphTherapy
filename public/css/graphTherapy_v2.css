@@ -50,9 +50,9 @@ a{
 }
 
 #bodyWrapper{
-	display: block;
+	/*display: block;*/
 	width:910;
-	height:256;
+	height:220;
 	background:#252525;
 }
 
