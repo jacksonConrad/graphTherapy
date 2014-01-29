@@ -35,8 +35,8 @@ angular.module('graphTherapyApp.services', ['ngResource']).
 	    function($document, $q, $rootScope) {
 			var d = $q.defer();
 			function onScriptLoad() {
-			// Load client in the browser
-			$rootScope.$apply(function() { d.resolve(window.d3); });
+				// Load client in the browser
+				$rootScope.$apply(function() { d.resolve(window.d3); });
 			}
 			// Create a script tag with d3 as the source
 			// and call our onScriptLoad callback when it
@@ -59,4 +59,12 @@ angular.module('graphTherapyApp.services', ['ngResource']).
 			d3: function() { return d.promise; }
 			};
 		}
+	]).factory('chartData', ['$q', '$rootScope', 
+		function ($q, $rootScope) {
+			var getMinuteData = function() {
+				
+			}
+
+		}
+
 	]);
