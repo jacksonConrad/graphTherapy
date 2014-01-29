@@ -8,8 +8,6 @@ angular.module('graphTherapyApp.directives', [])
 		h = 220;
 		console.log('OUTSIDE RETURN');
 
-
-
 		// Other helper functions
 
 	    return {
@@ -64,21 +62,41 @@ angular.module('graphTherapyApp.directives', [])
 	    				// If we don't pass any data, return out of the element
 	    				if (!chartData) return;
 
-	    				svg.selectAll("rect")
+						svg.selectAll("rect")
 						    .data(chartData)
-						    .enter().append("rect")
-						    .attr("x", function (d, i) { return x(i) - .5; })
-						    .attr("y", function (d) { return h - y(d.value) - .5; })
-						    .attr("width", 900/chartData.length)
-						    .attr("height", function (d) { return y(d.value); })
-						   
+						    .enter()
+						    .append("rect")
+						    	.attr("x", function (d, i) { return x(i) - .5; })
+						    	.attr("y", function (d) { return h - y(d.value) - .5; })
+						    	.attr("width", 900/chartData.length)
+						    	.attr("height", function (d) { return y(d.value); })
+
+						svg.selectAll("text")
+						    .data(chartData)
+						    .enter()
+							.append("text")
+								.text(function (d) { return d.value})
+						    	.attr("x", function (d, i) { return x(i) + 3; })
+						    	.attr("y", function (d) { return h - y(d.value) + 12; })
+						    	.attr("font-family", "Century Gothic")
+						    	.attr("font-size", "10")
+						    	.attr("fill","#000")
+
 						svg.append("line")
 						    .attr("x1", 0)
 						    .attr("x2", 900)
 						    .attr("y1", h - .5)
 						    .attr("y2", h - .5)
-						    .style("stroke", "#FFF");
+						    .style("stroke", "#FFF")
 
+						var xAxis = d3.svg.axis()
+							.scale(x)
+							.orient("bottom");
+
+						svg.append("g")
+							.attr("class", "x axis")
+							.attr("transform", "translate(0," + height + ")")
+							.call(xAxis);
 
 						var rect = svg.selectAll("rect")
 							.data(chartData, function (d) { return d.time; });
@@ -96,12 +114,12 @@ angular.module('graphTherapyApp.directives', [])
 
 						rect.transition()
 							.duration(1000)
-							.attr("x", function (d, i) { return x(i) - .5; });
+							.attr("x", function (d, i) { return x(i) - .5; })
 
 						rect.exit().transition()
 							.duration(1000)
 							.attr("x", function (d, i) { return x(i - 1) - .5; })
-							.remove();
+							.remove()
 					}
 	    		
 	    		return {
@@ -113,9 +131,8 @@ angular.module('graphTherapyApp.directives', [])
 	    		// Setup initial svg object
 				var svg = d3.select("#bodyWrapper").append("svg")
 					.attr("class", "chart")
-					// Because 60 bars`1
-					.attr("width", w * 60)
-					.attr("height", h);
+					.attr("width", (w * 60) + 10)
+					.attr("height", h );
 
 				scope.$watch('chartData', function (newData) {
 					console.log('INSIDE WATCH');
