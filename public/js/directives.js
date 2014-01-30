@@ -172,18 +172,19 @@ angular.module('graphTherapyApp.directives', [])
 					.attr("width", (w * 60) + 10)
 					.attr("height", h );
 
+				// Setup the tooltip object, which appears when you hover
+				// over a data bar
 				var toolTip = d3.select("#bodyWrapper").append("div")
 					.attr("class", "tooltip")
 	    			.style("opacity", 1e-6);
 
+	    		// Re-render the chart when the data changes.
+	    		// Data will change on an interval, or when the user
+	    		// selects a different time interval option
 				scope.$watch('chartData', function (newData) {
 					console.log('INSIDE WATCH');
 					controller.updateChart(svg, toolTip, newData);
 				});
-
-
-
-				//controller.updateChart(svg);
 	  		}
 	  	}
   	}
