@@ -64,20 +64,6 @@ angular.module('graphTherapyApp.directives', [])
 	    				// If we don't pass any data, return out of the element
 	    				if (!chartData) return;
 
-	    				// Define stock x and y axis
-						//var xAxis = d3.svg.axis().scale(x).orient('top');
-						//var yAxis = d3.svg.axis().scale(y).orient('left');
-						
-						 
-		/*				svg.append('g')
-						  .attr("class", "axis")
-						  .call(xAxis);*/
-						 
-						/*svg.append('g')
-						  .attr("class", "axis")
-						  .call(yAxis);*/
-
-
 						svg.selectAll("rect")
 						    .data(chartData)
 						    .enter()
@@ -108,31 +94,17 @@ angular.module('graphTherapyApp.directives', [])
 						    .attr("y2", h - .5)
 						    .style("stroke", "#FFF");
 
-						/*var xAxis = d3.svg.axis()
-							.scale(x)
-							.orient("bottom");
-
-						svg.append("g")
-							.attr("class", "x axis")
-							.attr("transform", "translate(0," + height + ")")
-							.call(xAxis);*/
-
 						var rect = svg.selectAll("rect")
 							.data(chartData, function (d) { return d.time; });
 
 						rect.enter().insert("rect", "line")
 							.attr("x", function (d, i) { return x(i + 1) - .5; })
 							.attr("y", function (d) { return h - y(d.value) - .5; })
-							//.text(function (d) { return d} )
 							.attr("width", w)
 							.attr("height", function (d) { return y(d.value); })
-							//.transition()
-							//.duration(1000)
-							.attr("x", function (d, i) { return x(i) - .5; });
-
-						// var div = d3.select("body").append("div")
-						//     .attr("class", "tooltip")
-						//     .style("opacity", 1e-6);
+							.transition()
+							.duration(1000);
+							//.attr("x", function (d, i) { return x(i) - .5; });
 
 						function mouseover() {
 						  	toolTip.transition()

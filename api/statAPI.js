@@ -301,7 +301,7 @@ function hourDataQuery(callback) {
 			},
 			// Second, rotate indexes
 			function (callback) {		
-				console.log(hoursBin);		
+				//console.log(hoursBin);		
 				for (var i = 0; i<(23 - now); i++) {
 					// Rotate indexes until they are in the correct spot with respect to now
 					hoursBin.unshift(hoursBin.pop());			
