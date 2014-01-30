@@ -94,6 +94,7 @@ angular.module('graphTherapyApp.directives', [])
 						    .attr("y2", h - .5)
 						    .style("stroke", "#FFF");
 
+
 						var rect = svg.selectAll("rect")
 							.data(chartData, function (d) { return d.time; });
 

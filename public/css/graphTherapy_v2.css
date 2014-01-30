@@ -54,7 +54,7 @@ a{
 	width:910;
 	height:220;
 	background:#252525;
-	padding-top: 20px;
+	margin-bottom: -23px;
 }
 
 #copyright{
@@ -123,6 +123,7 @@ a{
   top: 20px;
 }
 
+
 div.tooltip {
   position: absolute;
   text-align: center;
@@ -134,4 +135,20 @@ div.tooltip {
   border: solid 1px #aaa;
   border-radius: 8px;
   pointer-events: none;
+}
+
+.xAxis {
+	text-align: center
+}
+
+#xAxisText {
+
+	position: absolute;
+	z-index: 2;
+	color: white;
+	font-size: 9;
+	font-family: "Century Gothic";
+	top: 54em;
+	text-align: center;
+
 }
