@@ -122,3 +122,16 @@ a{
   opacity:1;
   top: 20px;
 }
+
+div.tooltip {
+  position: absolute;
+  text-align: center;
+  width: 65px;
+  height: 12px;
+  padding: 8px;
+  font: 10px sans-serif;
+  background: #ddd;
+  border: solid 1px #aaa;
+  border-radius: 8px;
+  pointer-events: none;
+}

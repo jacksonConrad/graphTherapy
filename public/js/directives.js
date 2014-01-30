@@ -5,7 +5,7 @@ angular.module('graphTherapyApp.directives', [])
 
 	    // Constants
 		var w = 15,
-		h = 220;
+		h = 200;
 		console.log('OUTSIDE RETURN');
 
 		// Other helper functions
@@ -23,7 +23,7 @@ angular.module('graphTherapyApp.directives', [])
 	    	controller: ['$scope', function ($scope, chartData) {
 
 	    		//var updateChart = 1;
-	    		var updateChart = function (svg, data) {
+	    		var updateChart = function (svg, toolTip, data) {
 						console.log('$scope.chartData: ');
 						console.dir($scope.chartData);
 						var chartData = $scope.chartData;
@@ -43,6 +43,8 @@ angular.module('graphTherapyApp.directives', [])
 						var x = d3.scale.linear()
 							.domain([0,1])
 							.range([0,(900/chartData.length)]);
+
+
 						console.log('array length: ' + chartData.length);
 					
 
@@ -62,6 +64,20 @@ angular.module('graphTherapyApp.directives', [])
 	    				// If we don't pass any data, return out of the element
 	    				if (!chartData) return;
 
+	    				// Define stock x and y axis
+						//var xAxis = d3.svg.axis().scale(x).orient('top');
+						//var yAxis = d3.svg.axis().scale(y).orient('left');
+						
+						 
+		/*				svg.append('g')
+						  .attr("class", "axis")
+						  .call(xAxis);*/
+						 
+						/*svg.append('g')
+						  .attr("class", "axis")
+						  .call(yAxis);*/
+
+
 						svg.selectAll("rect")
 						    .data(chartData)
 						    .enter()
@@ -70,6 +86,9 @@ angular.module('graphTherapyApp.directives', [])
 						    	.attr("y", function (d) { return h - y(d.value) - .5; })
 						    	.attr("width", 900/chartData.length)
 						    	.attr("height", function (d) { return y(d.value); })
+						    	.on("mouseover", mouseover)
+							    .on("mousemove", mousemove)
+							    .on("mouseout", mouseout);
 
 						svg.selectAll("text")
 						    .data(chartData)
@@ -80,23 +99,23 @@ angular.module('graphTherapyApp.directives', [])
 						    	.attr("y", function (d) { return h - y(d.value) + 12; })
 						    	.attr("font-family", "Century Gothic")
 						    	.attr("font-size", "10")
-						    	.attr("fill","#000")
+						    	.attr("fill","#000");
 
 						svg.append("line")
 						    .attr("x1", 0)
 						    .attr("x2", 900)
 						    .attr("y1", h - .5)
 						    .attr("y2", h - .5)
-						    .style("stroke", "#FFF")
+						    .style("stroke", "#FFF");
 
-						var xAxis = d3.svg.axis()
+						/*var xAxis = d3.svg.axis()
 							.scale(x)
 							.orient("bottom");
 
 						svg.append("g")
 							.attr("class", "x axis")
 							.attr("transform", "translate(0," + height + ")")
-							.call(xAxis);
+							.call(xAxis);*/
 
 						var rect = svg.selectAll("rect")
 							.data(chartData, function (d) { return d.time; });
@@ -107,12 +126,57 @@ angular.module('graphTherapyApp.directives', [])
 							//.text(function (d) { return d} )
 							.attr("width", w)
 							.attr("height", function (d) { return y(d.value); })
-							.transition()
-							.duration(1000)
-							.attr("x", function (d, i) { return x(i) - .5; })
-							
+							//.transition()
+							//.duration(1000)
+							.attr("x", function (d, i) { return x(i) - .5; });
 
-						rect.transition()
+						// var div = d3.select("body").append("div")
+						//     .attr("class", "tooltip")
+						//     .style("opacity", 1e-6);
+
+						function mouseover() {
+						  	toolTip.transition()
+								.duration(500)
+								.style("opacity", 1);
+						}
+
+						function mousemove(d) {
+							switch (chartData.length) {
+								case 60:
+								toolTip
+								    .text(moment(d.date).format('h:mm:ss a'))
+								    .style("left", (d3.event.pageX - 75) + "px")
+								    .style("top", (d3.event.pageY - 12) + "px");
+								    break;
+								case 24:
+								toolTip
+								    .text(moment(d.date).format('h:mm a'))
+								    .style("left", (d3.event.pageX - 75) + "px")
+								    .style("top", (d3.event.pageY - 12) + "px");
+								    break;
+								case 28:
+								toolTip
+								    .text(moment(d.date).format('MMMM Do'))
+								    .style("left", (d3.event.pageX - 80) + "px")
+								    .style("top", (d3.event.pageY - 12) + "px");
+								    break;
+								default:
+								toolTip
+								    .text(moment(d.date).format('MMMM Do YYYY, h:mm:ss a'))
+								    .style("left", (d3.event.pageX - 150) + "px")
+								    .style("top", (d3.event.pageY - 12) + "px");
+							}
+						  
+						}
+
+						function mouseout() {
+						  toolTip.transition()
+						      .duration(500)
+						      .style("opacity", 1e-6);
+						}
+													
+
+						/*rect.transition()
 							.duration(1000)
 							.attr("x", function (d, i) { return x(i) - .5; })
 
@@ -120,6 +184,7 @@ angular.module('graphTherapyApp.directives', [])
 							.duration(1000)
 							.attr("x", function (d, i) { return x(i - 1) - .5; })
 							.remove()
+							*/
 					}
 	    		
 	    		return {
@@ -134,9 +199,13 @@ angular.module('graphTherapyApp.directives', [])
 					.attr("width", (w * 60) + 10)
 					.attr("height", h );
 
+				var toolTip = d3.select("#bodyWrapper").append("div")
+					.attr("class", "tooltip")
+	    			.style("opacity", 1e-6);
+
 				scope.$watch('chartData', function (newData) {
 					console.log('INSIDE WATCH');
-					controller.updateChart(svg, newData);
+					controller.updateChart(svg, toolTip, newData);
 				});
 
 
