@@ -89,22 +89,12 @@ angular.module('graphTherapyApp.directives', [])
 						    .attr("y2", h - .5)
 						    .style("stroke", "#FFF")
 
-						var xAxis = d3.svg.axis()
-							.scale(x)
-							.orient("bottom");
-
-						svg.append("g")
-							.attr("class", "x axis")
-							.attr("transform", "translate(0," + height + ")")
-							.call(xAxis);
-
 						var rect = svg.selectAll("rect")
 							.data(chartData, function (d) { return d.time; });
 
 						rect.enter().insert("rect", "line")
 							.attr("x", function (d, i) { return x(i + 1) - .5; })
 							.attr("y", function (d) { return h - y(d.value) - .5; })
-							//.text(function (d) { return d} )
 							.attr("width", w)
 							.attr("height", function (d) { return y(d.value); })
 							.transition()
