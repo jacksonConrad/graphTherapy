@@ -9,9 +9,9 @@ angular.module('graphTherapyApp.controllers', []).
 		$scope.dData  = new Array(28);*/
 		$scope.options = 
 			[
-				{label: 'minutes', data: new Array(60)},
-				{label: 'hours',   data: new Array(24)},
-				{label: 'days',    data: new Array(28)}
+				{label: 'minutes', max: '59', data: new Array(60)},
+				{label: 'hours', max: '23',  data: new Array(24)},
+				{label: 'days', max: '24',   data: new Array(28)}
 			];
 		$scope.selection = $scope.options[0];
 
