@@ -126,9 +126,11 @@ function emitMinute(callback) {
 		minutesBin.push({
 			time: (minutesBin[59].time + 1) % 60,
 			value:results.length,
-			date: Moment().minutes().toJSON()
+			date: Moment().subtract('minute', 1).startOf('minute').toJSON()
 		});
 		minutesBin.shift();
+		console.log('IN EMIT MINUTE:');
+		//console.log(Moment().minutes().format('MMMM Do YYYY, h:mm:ss a'));
 		
 		//console.log('IN EMIT MINUTE FUNCTION');
 		callback(minutesBin);
@@ -143,7 +145,7 @@ function emitHour(callback) {
 		hoursBin.push({
 			time: (hoursBin[23].time + 1) % 24,
 			value:results.length,
-			date: Moment().hours().toJSON()
+			date: Moment().subtract('hour', 1).startOf('hour').toJSON()
 		});
 		hoursBin.shift();
 		
@@ -160,7 +162,7 @@ function emitDay(callback) {
 		daysBin.push({
 			time: (daysBin[59].time + 1) % 28,
 			value:results.length,
-			date: Moment().days().toJSON()
+			date: Moment().subtract('day', 1).startOf('day').toJSON()
 		});
 		daysBin.shift();
 		
