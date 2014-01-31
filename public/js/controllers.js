@@ -28,7 +28,7 @@ angular.module('graphTherapyApp.controllers', []).
 
 		// Every minute, update the data
 		socketService.on('minutesBin', function (minutesBin) {
-			$scope.options[0].data = minutesBin;
+			$scope.options[0].data = minutesBin.reverse();
 			console.dir('Got minutesBin!');
 			console.dir($scope.options[0].data);
 			// render the graph when the data loads
@@ -37,7 +37,7 @@ angular.module('graphTherapyApp.controllers', []).
 
 		// Every hour, update the data
 		socketService.on('hoursBin', function (hoursBin) {
-			$scope.options[1].data = hoursBin;
+			$scope.options[1].data = hoursBin.reverse();
 			console.dir('Got hoursBin!');
 			console.dir($scope.options[1].data);
 			// render the graph when the data loads
@@ -46,23 +46,12 @@ angular.module('graphTherapyApp.controllers', []).
 
 		// Every day, update the data
 		socketService.on('daysBin', function (daysBin) {
-			$scope.options[2].data = daysBin;
+			$scope.options[2].data = daysBin.reverse();
 			console.dir('Got daysBin!');
 			console.dir($scope.options[2].data);
 			// render the graph when the data loads
 			//$scope.render($scope.data);	
 		});
-
-
-		$scope.change = function (sel) {
-			/*
-			if (sel == options[1])
-				$scope.data = $scope.mData
-			*/
-			console.dir(sel);
-		}
-
-
 
 	}).
 	controller('graph_A_Ctrl', function ($scope, $http) {

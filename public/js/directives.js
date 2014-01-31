@@ -27,8 +27,8 @@ angular.module('graphTherapyApp.directives', [])
 						console.log('$scope.chartData: ');
 						console.dir($scope.chartData);
 						var chartData = $scope.chartData;
-						console.log('data');
-						console.dir(data);
+						// console.log('data');
+						// console.dir(data);
 						// Format data
 						
 						
@@ -99,7 +99,7 @@ angular.module('graphTherapyApp.directives', [])
 							.data(chartData, function (d) { return d.time; });
 
 						rect.enter().insert("rect", "line")
-							.attr("x", function (d, i) { return x(i + 1) - .5; })
+							.attr("x", function (d, i) { return x(i - 1) - .5; })
 							.attr("y", function (d) { return h - y(d.value) - .5; })
 							.attr("width", w)
 							.attr("height", function (d) { return y(d.value); })
