@@ -48,9 +48,9 @@
 
 			<div id="bodyOverWrap">
 				<select ng-model="selection" ng-options="opt as opt.label for opt in options"></select>
-			<div id="bodyWrapper">
-				<d3-bars chart-data="selection.data"></d3-bars>
-            </div>
+				<div id="bodyWrapper">
+					<d3-bars chart-data="selection.data"></d3-bars>
+            	</div>
        		</div>
             
         </td>
@@ -84,6 +84,7 @@
             			<th></th>
             			<th>User</th>
             			<th>Tweet</th>
+            		</tr>
         			<tr class = "animate" ng-repeat="tweet in tweets | limitTo: 20">
         				<td><div id= "dateFromNow">{{ tweet.created_at | fromNow }}</div></td>
         				<td><a href = "http://twitter.com/{{ tweet.user.screen_name }}/" target="_newtab"><span id="pictureWrapper"><img src= "{{ tweet.user.profile_image_url }}" height="24px" width="24px"></span></a></td>
