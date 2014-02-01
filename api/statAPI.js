@@ -333,7 +333,7 @@ function dayDataQuery(callback) {
 		// Use async module to execute operations in series
 		// and pass results to a final callback
 		var now = Moment().startOf('day');
-		console.log('we are in day: ' + now);
+		console.log('we are in day: ' + now.dates());
 		console.log('There have been ' + results.length + ' tweets in the past 4 weeks');
 		// console.log(minutesBin);
 
