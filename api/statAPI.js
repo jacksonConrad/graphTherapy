@@ -129,10 +129,6 @@ function emitMinute(callback) {
 			date: Moment().subtract('minute', 1).startOf('minute').toJSON()
 		});
 		minutesBin.shift();
-		console.log('IN EMIT MINUTE:');
-		//console.log(Moment().minutes().format('MMMM Do YYYY, h:mm:ss a'));
-		
-		//console.log('IN EMIT MINUTE FUNCTION');
 		callback(minutesBin);
 	});
 }
@@ -330,14 +326,14 @@ function hourDataQuery(callback) {
 }
 
 function dayDataQuery(callback) {
-	Tweet.find({'created_at': {$gte: Moment().subtract('day', 28).toJSON()}}, 
+	Tweet.find({'created_at': {$gte: Moment().startOf('day').subtract('day', 28).toJSON(), $lt: Moment().startOf('day').toJSON()}}, 
 		'created_at user.followers_count')
 	.sort({'created_at': -1})
 	.exec(function (err, results) {
 		// Use async module to execute operations in series
 		// and pass results to a final callback
-		var now = Moment().dates();
-		//console.log('we are in minute: ' + now);
+		var now = Moment().startOf('day');
+		console.log('we are in day: ' + now);
 		console.log('There have been ' + results.length + ' tweets in the past 4 weeks');
 		// console.log(minutesBin);
 
@@ -345,12 +341,16 @@ function dayDataQuery(callback) {
 			function (callback) {
 
 				// First, fill bins with the proper value where index corresponds to minutes
-				_.each(results, function (tweet) {
-					var bin = Moment( tweet.created_at ).dates();
-					// console.log(bin);
 
-						if(daysBin[bin % 28].date == null)
-							daysBin[bin % 28].date = Moment( tweet.created_at).startOf('day').toJSON();
+				_.each(results, function (tweet) {
+					var bin = Moment( tweet.created_at ).startOf('day');
+					// console.log(bin);
+						//console.log(now.diff(bin, 'days'));
+
+						if(daysBin[now.diff(bin, 'days') - 1].date == null) {
+							console.log(now.diff(bin, 'days'));
+							daysBin[now.diff(bin, 'days') - 1].date = Moment( tweet.created_at).startOf('day').toJSON();
+						}
 
 						daysBin[bin % 28].value++;
 				});
@@ -362,19 +362,19 @@ function dayDataQuery(callback) {
 			},
 			// Second, rotate indexes
 			function (callback) {
-			/*				
-				for (var i = 0; i<(27 - (now % 28)); i++) {
+							
+				/*for (var i = 0; i<(27 - (now % 28)); i++) {
 					// Rotate indexes until they are in the correct spot with respect to now
 					daysBin.unshift(daysBin.pop());			
-				}
-			*/	//console.log('hello
+				}*/
+				//console.log('hello
 				callback(null, daysBin);
 			}
 			],
 			// Final callback
 			function (err, results) {
 				console.log('daysBin initialized!');
-				//console.log(results[1]);
+				console.log(results[1]);
 
 			}
 		);

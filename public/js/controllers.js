@@ -46,7 +46,7 @@ angular.module('graphTherapyApp.controllers', []).
 
 		// Every day, update the data
 		socketService.on('daysBin', function (daysBin) {
-			$scope.options[2].data = daysBin.reverse();
+			$scope.options[2].data = daysBin;
 			console.dir('Got daysBin!');
 			console.dir($scope.options[2].data);
 			// render the graph when the data loads
