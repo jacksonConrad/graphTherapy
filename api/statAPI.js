@@ -352,13 +352,14 @@ function dayDataQuery(callback) {
 							daysBin[now.diff(bin, 'days') - 1].date = Moment( tweet.created_at).startOf('day').toJSON();
 						}
 
-						daysBin[bin % 28].value++;
+						daysBin[now.diff(bin, 'days') - 1].value++;
 				});
 
 				//console.log('hello');
 
+				
 				callback();
-				//console.log(minutesBin);
+				
 			},
 			// Second, rotate indexes
 			function (callback) {

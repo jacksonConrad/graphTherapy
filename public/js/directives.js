@@ -129,10 +129,9 @@ angular.module('graphTherapyApp.directives', [])
 								    break;
 								case 28:
 								toolTip
-								    .text(moment(d.date).add('day',1).format('MMMM Do'))
+								    .text(moment(d.date).format('MMMM Do'))
 								    .style("left", (d3.event.pageX - 80) + "px")
 								    .style("top", (d3.event.pageY - 12) + "px");
-								    //console.log(moment(d.date).format('MMMM Do'));
 								    break;
 								default:
 								toolTip
