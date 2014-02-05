@@ -7,16 +7,6 @@ Tweet = require('./models/TweetModel');
 
 module.exports = function(twitter, io) {
 
-  // SET UP SOCKET =============================================================
-
-  //THIS IS NECESSARY ONLY FOR HEROKU!
-/*
-  io.configure(function() {
-    io.set('transports', ['xhr-polling']);
-    io.set('polling duration', 10);
-  });
-*/
-
   // SET UP TWITTER STREAM ======================================================
 
   var t = new twitter({
@@ -42,8 +32,6 @@ module.exports = function(twitter, io) {
     console.log('- ' + v);
     watchList.symbols[v] = 0; 
   });
-
-   
 
   //Tell the twitter API to filter on the watchSymbols 
   t.stream('statuses/filter', { track: watchSymbols }, function(stream) {
@@ -108,17 +96,11 @@ module.exports = function(twitter, io) {
             if(err)
               console.log("ERROR: unable to add tweet to the database");
             else {
-              //console.log("Tweet saved");
-              //console.log(result);
               //Send tweet to all the clients
               io.sockets.emit('tweet', result);
               
             }
           });
-          
-          //emit tweet to all clients
-          
-
           //Increment total
           watchList.total++;   
         }
@@ -130,7 +112,6 @@ module.exports = function(twitter, io) {
       console.log('ERR: stream ended');
       console.log(response);
     });
-    
 
     // Handle a silent disconnect from twitter
     stream.on('destroy', function(response) {
@@ -147,6 +128,5 @@ module.exports = function(twitter, io) {
       console.log('ERROR');
       console.log(resopnse);
     });
-
   });
 };

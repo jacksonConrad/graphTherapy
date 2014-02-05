@@ -1,10 +1,12 @@
 var mongoose = require('mongoose');
+// provides 'long' number support to mongoose
+// necessary because twitter user ID's are longs
 require('mongoose-long')(mongoose);
 SchemaTypes = mongoose.Schema.Types;
 
 Schema = mongoose.Schema;
 
-
+// Taken from the twitter API.  We are only storing elements of the tweet that we find potentially useful
 var tweetSchema = new Schema({
     created_at: Date,
     id: {type: SchemaTypes.Long, min: 0, default: 0},

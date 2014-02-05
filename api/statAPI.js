@@ -7,11 +7,6 @@ var async = require('async');
 
 var birthTime = Moment().toJSON();
 
-//console.log(birthTime.format('MMMM Do YYYY, h:mm:ss a'));
-//One hour ago.
-//console.log(Moment().hour( Moment().hour() - 1).toJSON() );
-//console.log(Moment().format('MMMM Do YYYY, h:mm:ss a'));
-
 minutesBin = [];
 hoursBin   = [];
 daysBin    = [];
@@ -43,11 +38,6 @@ while (day--) {
     	value: 0
     }
 }
-
-
-
-
-
 
 
 module.exports = function(app, io) {
@@ -107,12 +97,6 @@ module.exports = function(app, io) {
 		socket.emit('daysBin', daysBin);
 	});
 };
-
-
-//////////////////
-// Private Fn's //
-//////////////////
-
 
 ////////////////////////////////////////
 // Functions executing on an interval //
@@ -210,7 +194,6 @@ function startCronJobs(callback) {
 		}
 	);	
 }	
-
 
 ////////////////
 // DB Queries //
