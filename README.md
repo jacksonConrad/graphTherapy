@@ -19,6 +19,7 @@ The bargraph was build using d3
 ##Technical Overview
 
 This app uses the Twitter Streaming API to track the following keywords:
+
     - aboveandbeyond
     - abgrouptherapy
     - grouptherapy
@@ -43,7 +44,11 @@ update the table in real-time.
 
 ###Bar Graph
 
-There are three possible views for the bar-graph: minutes, hours, days.
+There are three possible views for the bar-graph: 
+
+* minutes
+* hours 
+* days
 
 To view the time correseponding to a given bar, you have to hover your mouse over it.
 I thought this would be a cleaner alternative to listing all 60/24/28 times on the x-axis.
