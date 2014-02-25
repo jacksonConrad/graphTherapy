@@ -309,7 +309,7 @@ function hourDataQuery(callback) {
 }
 
 function dayDataQuery(callback) {
-	Tweet.find({'created_at': {$gte: Moment().startOf('day').subtract('day', 28).toJSON(), $lt: Moment().startOf('day').toJSON()}}, 
+	Tweet.find({'created_at': {$gte: Moment().startOf('day').subtract('day', 14).toJSON(), $lt: Moment().startOf('day').toJSON()}}, 
 		'created_at user.followers_count')
 	.sort({'created_at': -1})
 	.exec(function (err, results) {
@@ -320,6 +320,9 @@ function dayDataQuery(callback) {
 		//console.log('There have been ' + results.length + ' tweets in the past 4 weeks');
 		if (!results) {
 			console.log("ALERT:  Query for day data has failed!");
+		}
+		else {
+			console.log("There have been " + results.length + " tweets in the past 4 weeks");
 		}
 		// console.log(minutesBin);
 
