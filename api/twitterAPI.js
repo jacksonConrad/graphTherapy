@@ -19,18 +19,10 @@ module.exports = function(twitter, io) {
   // Twitter symbols array
   var watchSymbols = ['abgt', 'grouptherapy', 'aboveandbeyond', 'abgrouptherapy'];
 
-  // This structure will keep the total number of tweets received and a map of all the symbols 
-  // and how many tweets received of that symbol
-  var watchList = {
-      total: 0,
-      symbols: {}
-  };
-
   //Set the watch symbols to zero.
   console.log('WATCHING:');
   _.each(watchSymbols, function(v) { 
     console.log('- ' + v);
-    watchList.symbols[v] = 0; 
   });
 
   //Tell the twitter API to filter on the watchSymbols 
@@ -52,58 +44,39 @@ module.exports = function(twitter, io) {
         console.log(tweet.user.screen_name + ' Says: ');
         console.log(tweet.text);
         console.log('\n');
-        
-        //We're gunna do some indexOf comparisons and we want it to be case agnostic.
-        var text = tweet.text.toLowerCase();
-   
-        //Go through every symbol and see if it was mentioned. If so, increment its counter and
-        //set the 'claimed' variable to true to indicate something was mentioned so we can increment
-        //the 'total' counter!
-        _.each(watchSymbols, function(v) {
-            if (text.indexOf(v.toLowerCase()) !== -1) {
-                watchList.symbols[v]++;
-                claimed = true;
-            }
-        });
-   
-        //If something was mentioned, increment the total counter and send the update to all the clients
-        if (claimed) {
 
-          Tweet.create(
+        // Store tweet in the database
+        Tweet.create(
+        {
+          created_at             : tweet.created_at,
+          id                     : tweet.id,
+          text                   : tweet.text,
+          in_reply_to_status_id  : tweet.in_reply_to_status_id,
+          in_reply_to_user_id    : tweet.in_reply_to_user_id,
+          in_reply_to_screen_name: tweet.in_reply_to_screen_name,
+          user                   : 
           {
-            created_at             : tweet.created_at,
-            id                     : tweet.id,
-            text                   : tweet.text,
-            in_reply_to_status_id  : tweet.in_reply_to_status_id,
-            in_reply_to_user_id    : tweet.in_reply_to_user_id,
-            in_reply_to_screen_name: tweet.in_reply_to_screen_name,
-            user                   : 
-            {
-              id                          : tweet.user.id,
-              name                        : tweet.user.name,
-              screen_name                 : tweet.user.screen_name,
-              location                    : tweet.user.location,
-              description                 : tweet.user.description,
-              followers_count             : tweet.user.followers_count,
-              friends_count               : tweet.user.friends_count,
-              timezone                    : tweet.user.timezone,
-              profile_background_image_url: tweet.user.profile_background_image_url,
-              profile_image_url           : tweet.user.profile_image_url,
-              profile_banner_url          : tweet.user.profile_banner_url
-            }
-          }, 
-          function(err, result) {
-            if(err)
-              console.log("ERROR: unable to add tweet to the database");
-            else {
-              //Send tweet to all the clients
-              io.sockets.emit('tweet', result);
-              
-            }
-          });
-          //Increment total
-          watchList.total++;   
-        }
+            id                          : tweet.user.id,
+            name                        : tweet.user.name,
+            screen_name                 : tweet.user.screen_name,
+            location                    : tweet.user.location,
+            description                 : tweet.user.description,
+            followers_count             : tweet.user.followers_count,
+            friends_count               : tweet.user.friends_count,
+            timezone                    : tweet.user.timezone,
+            profile_background_image_url: tweet.user.profile_background_image_url,
+            profile_image_url           : tweet.user.profile_image_url,
+            profile_banner_url          : tweet.user.profile_banner_url
+          }
+        }, 
+        function(err, result) {
+          if(err)
+            console.log("ERROR: unable to add tweet to the database");
+          else {
+            //Send tweet to all the clients
+            io.sockets.emit('tweet', result);
+          }
+        });
       }
     });
 
