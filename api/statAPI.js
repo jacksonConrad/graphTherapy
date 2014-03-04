@@ -3,6 +3,7 @@ var Tweet = require('./models/TweetModel');
 var Moment = require('moment');
 var _ = require('underscore');
 var async = require('async');
+var cronJob = require('cron').CronJob;
 
 
 var birthTime = Moment().toJSON();
@@ -42,6 +43,7 @@ while (day--) {
 
 module.exports = function(app, io) {
 
+	// Returns the last :number tweets to keep in the table
 	app.get('/api/getlast/:number', function(req, res) {
 		Tweet.find({}, 'created_at text id user.screen_name user.profile_image_url user.followers_count')		
 		.sort({'created_at':-1})
@@ -49,8 +51,6 @@ module.exports = function(app, io) {
 
 		.exec(function(err, results) {
 			res.json(results);
-			//console.log(results[0].created_at.getYear());
-
 		});
 	});
 
@@ -84,10 +84,7 @@ module.exports = function(app, io) {
 			
 		});
 	
-	//////////////////////////////
 	// Initialize event timers //
-	//////////////////////////////
-
 	startCronJobs();
 
 	// Serve clients data over a socket when they connect
@@ -98,9 +95,9 @@ module.exports = function(app, io) {
 	});
 };
 
-////////////////////////////////////////
-// Functions executing on an interval //
-////////////////////////////////////////
+/////////////////////////////////
+// Data Aggregation functions  //
+/////////////////////////////////
 
 function emitMinute(callback) {
 	Tweet.find({'created_at': {$gte: Moment().subtract('minute', 1).toJSON()}}, 
@@ -129,7 +126,6 @@ function emitHour(callback) {
 		});
 		hoursBin.shift();
 		
-		//console.log('IN EMIT MINUTE FUNCTION');
 		callback(hoursBin);
 	});
 }
@@ -146,15 +142,38 @@ function emitDay(callback) {
 		});
 		daysBin.shift();
 		
-		//console.log('IN EMIT MINUTE FUNCTION');
 		callback(daysBin);
 	});
 }
 
 // Initialize event timers
-function startCronJobs(callback) {
-	// emit new data every minute
-	setInterval(
+function startCronJobs() {
+
+	// Triggers every day at midnight
+	new cronJob('00 00 00 * * *', function(){
+    	console.log('You will see this message every day');
+    	emitDay(function (data)  {
+    		io.sockets.emit("daysBin",data);
+    	});
+	}, null, true, "America/New_York");
+
+	// Triggers every hour on the hour
+	new cronJob('00 00 * * * *', function(){
+    	console.log('You will see this message every hour');
+    	emitHour(function (data)  {
+    		io.sockets.emit("hoursBin", data);
+    	});
+	}, null, true, "America/New_York");
+
+	// Triggers every minute on the minute
+	new cronJob('00 * * * * *', function(){
+    	console.log('You will see this message every minute');
+    	emitMinute(function (data)  {
+    		io.sockets.emit("minutesBin", data);
+    	});
+	}, null, true, "America/New_York");
+
+	/*setInterval(
 		// emit new data
 		emitMinute
 		// every minute
@@ -193,14 +212,14 @@ function startCronJobs(callback) {
 			//console.log(minutesBin);
 		}
 	);	
+*/
 }	
-
 ////////////////
 // DB Queries //
 ////////////////
 
 function minuteDataQuery(callback) {
-	Tweet.find({'created_at': {$gte: Moment().subtract('hour', 1).toJSON()}}, 
+	Tweet.find({'created_at': {$gte: Moment().startOf('minute').subtract('hour', 1).toJSON(), $lt: Moment().startOf('minute').toJSON()}}, 
 		'created_at user.followers_count')
 	.exec(function (err, results) {
 		// Use async module to execute operations in series
@@ -208,7 +227,6 @@ function minuteDataQuery(callback) {
 		var now = Moment().minutes();
 		console.log('we are in minute: ' + now);
 		console.log('There have been ' + results.length + ' tweets in the past hour');
-		// console.log(minutesBin);
 
 		async.series([
 			function (callback) {
@@ -220,13 +238,9 @@ function minuteDataQuery(callback) {
 					if(minutesBin[bin].date == null)
 						minutesBin[bin].date = Moment( tweet.created_at ).startOf('minute').toJSON();
 
-						//console.log(minutesBin[bin]);
 					minutesBin[bin].value++;
-						//console.log(bin);
-					
 				});
 				callback();
-				//console.log(minutesBin);
 			},
 			// Second, rotate indexes
 			function (callback) {				
@@ -250,7 +264,7 @@ function minuteDataQuery(callback) {
 }
 
 function hourDataQuery(callback) {
-	Tweet.find({'created_at': {$gte: Moment().subtract('hour', 24).toJSON()}}, 
+	Tweet.find({'created_at': {$gte: Moment().startOf('hour').subtract('hour', 24).toJSON(), $lt: Moment().startOf('hour').toJSON()}}, 
 		'created_at user.followers_count')
 	.sort({'created_at': -1})
 	.exec(function (err, results) {
@@ -270,23 +284,14 @@ function hourDataQuery(callback) {
 					//console.log(bin);
 					if(hoursBin[bin].date == null) {
 						hoursBin[bin].date = Moment( tweet.created_at ).startOf('hour').toJSON();
-						//console.log('herooooo');
-						//console.log(Moment( tweet.created_at ).startOf('hour').format('MMMM Do YYYY, h:mm:ss a'));
 					}
-						//console.log(minutesBin[bin]);
 					hoursBin[bin].value++;
-						//console.log(bin);
-					//console.log( Moment( tweet.created_at ).format('MMMM Do YYYY, h:mm:ss a') );
-
-					
 				});
 				callback();
-				//console.log(minutesBin);
 			},
 			// Second, rotate indexes
 			function (callback) {		
-				//console.log(hoursBin);		
-				for (var i = 0; i<(23 - now); i++) {
+				for (var i = 0; i<(24 - now); i++) {
 					// Rotate indexes until they are in the correct spot with respect to now
 					hoursBin.unshift(hoursBin.pop());			
 				}
@@ -296,13 +301,7 @@ function hourDataQuery(callback) {
 			// Final callback
 			function (err, results) {
 				console.log('hoursBin initialized!');
-				//console.log(results[1]);
-				for(var i = 0; i<24; i++) {
-					//console.log( Moment( results[1][i].date ).format('MMMM Do YYYY, h:mm:ss a') );
-					//console.log(results[1][i].time);
-				}
-				//console.log(results[1]);
-				
+				console.log(results[1]);
 			}
 		);
 	});
@@ -324,13 +323,10 @@ function dayDataQuery(callback) {
 		else {
 			console.log("There have been " + results.length + " tweets in the past 4 weeks");
 		}
-		// console.log(minutesBin);
 
 		async.series([
 			function (callback) {
-
 				// First, fill bins with the proper value where index corresponds to minutes
-
 				_.each(results, function (tweet) {
 					var bin = Moment( tweet.created_at ).startOf('day');
 					// console.log(bin);
@@ -343,28 +339,13 @@ function dayDataQuery(callback) {
 
 						daysBin[now.diff(bin, 'days') - 1].value++;
 				});
-
-				//console.log('hello');
-
-				
-				callback();
-				
-			},
-			// Second, rotate indexes
-			function (callback) {
-							
-				/*for (var i = 0; i<(27 - (now % 28)); i++) {
-					// Rotate indexes until they are in the correct spot with respect to now
-					daysBin.unshift(daysBin.pop());			
-				}*/
-				//console.log('hello
 				callback(null, daysBin);
 			}
 			],
 			// Final callback
 			function (err, results) {
 				console.log('daysBin initialized!');
-				console.log(results[1]);
+				console.log(results[0]);
 
 			}
 		);
