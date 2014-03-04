@@ -309,7 +309,7 @@ function hourDataQuery(callback) {
 }
 
 function dayDataQuery(callback) {
-	Tweet.find({'created_at': {$gte: Moment().startOf('day').subtract('day', 14).toJSON(), $lt: Moment().startOf('day').toJSON()}}, 
+	Tweet.find({'created_at': {$gte: Moment().startOf('day').subtract('day', 28).toJSON(), $lt: Moment().startOf('day').toJSON()}}, 
 		'created_at user.followers_count')
 	.sort({'created_at': -1})
 	.exec(function (err, results) {
