@@ -15,15 +15,11 @@ twitter     = require('ntwitter');
 var configDB = require('./config/database.js');
 
 // Configuration
-
 mongoose.connect(configDB.url); // connect to our database
-
 // set up our express application
 app.use(express.logger('dev')); // log every request to the console
 app.use(express.bodyParser()); // get information from html forms
-
 // Serve static files
- 
 app.set('port', port);
 app.use("/js", express.static(__dirname + "/public/js"));
 app.use("/css", express.static(__dirname + "/public/css"));
@@ -32,7 +28,6 @@ app.use("/lib", express.static(__dirname + "/public/lib"));
 app.use("/images", express.static(__dirname + "/public/images"));
 
 // LAUNCH *********************************************/
-
 io = require("socket.io").listen(server, {log: false});
 
 /* 
